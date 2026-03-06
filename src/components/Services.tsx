@@ -54,7 +54,7 @@ const Services = () => {
             key={service.title}
             className="group rounded-xl border border-border p-8 transition-all hover:shadow-lg hover:border-gold/30 bg-primary-foreground text-navy-light">
             
-              <div className="mb-5 h-12 w-12 items-center justify-center rounded-lg text-navy-dark flex flex-row bg-navy-light border-navy">
+              <div className="mb-5 h-12 w-12 text-navy-dark flex-row bg-navy-light border-navy flex items-center justify-center border-0 rounded-xl">
                 <service.icon className="h-6 w-6 text-gold" />
               </div>
               <h3 className="font-serif text-xl font-bold text-card-foreground">
