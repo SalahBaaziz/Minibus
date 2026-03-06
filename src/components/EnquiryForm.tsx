@@ -82,6 +82,7 @@ const EnquiryForm = () => {
 
 
 
+
       // silently handle - show success anyway per spec
     }setSubmitted(true);};const stepLabels = ["About You", "Journey", "Locations", "Date & Time", "Extras"];if (submitted) {return <section id="enquiry" className="bg-navy py-20 lg:py-28">
         <div className="mx-auto max-w-2xl px-6 text-center">
@@ -123,7 +124,7 @@ const EnquiryForm = () => {
             </div>)}
         </div>
 
-        <div className="rounded-xl border border-navy-light/30 p-8 bg-gold-light">
+        <div className="rounded-xl border border-navy-light/30 p-8 bg-gold-dark">
           {/* Step 1: About You */}
           {step === 1 && <div className="space-y-5 text-navy-light">
               <div className="text-base">
@@ -200,11 +201,10 @@ const EnquiryForm = () => {
                   
                     Yes
                   </button>
-                  <button type="button"
-              onClick={() => setReturnJourney(false)}
-              className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-              !returnJourney ? "bg-gold text-navy" : "bg-navy-light/30 text-primary-foreground/60 hover:bg-navy-light/50"}`
-              }>
+                  <button type="button" onClick={() => setReturnJourney(false)}
+                className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                !returnJourney ? "bg-gold text-navy" : "bg-navy-light/30 text-primary-foreground/60 hover:bg-navy-light/50"}`
+                }>
                   
                     No
                   </button>
