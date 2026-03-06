@@ -6,82 +6,93 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 215 25% 20%;
+    --background: 43 25% 93%;
+    --foreground: 168 30% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 20%;
+    --card-foreground: 168 30% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 20%;
+    --popover-foreground: 168 30% 15%;
 
-    --primary: 215 50% 15%;
+    --primary: 168 40% 30%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 215 25% 20%;
+    --secondary: 43 20% 90%;
+    --secondary-foreground: 168 30% 15%;
 
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 10% 50%;
+    --muted: 43 20% 90%;
+    --muted-foreground: 168 10% 42%;
 
-    --accent: 210 20% 96%;
-    --accent-foreground: 215 25% 20%;
+    --accent: 168 25% 85%;
+    --accent-foreground: 168 30% 15%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 30% 91%;
-    --input: 214 30% 91%;
-    --ring: 215 50% 15%;
+    --border: 168 18% 82%;
+    --input: 168 18% 82%;
+    --ring: 168 40% 30%;
 
     --radius: 0.5rem;
 
-    /* Custom tokens */
-    --navy: 215 50% 15%;
-    --navy-dark: 215 55% 10%;
-    --navy-light: 215 40% 25%;
-    --gold: 38 45% 60%;
-    --gold-light: 38 50% 68%;
-    --gold-dark: 38 40% 50%;
+    /* navy = dark teal for section backgrounds */
+    --navy:       168 42% 24%;
+    --navy-dark:  165 35% 16%;
+    --navy-light: 168 38% 32%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* gold = same teal family for stars, labels, accents */
+    --gold:       168 38% 38%;
+    --gold-light: 168 35% 46%;
+    --gold-dark:  168 42% 28%;
+
+    --sidebar-background: 43 25% 93%;
+    --sidebar-foreground: 168 30% 15%;
+    --sidebar-primary: 168 40% 30%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 168 25% 85%;
+    --sidebar-accent-foreground: 168 30% 15%;
+    --sidebar-border: 168 18% 82%;
+    --sidebar-ring: 168 40% 30%;
   }
 
   .dark {
-    --background: 215 55% 10%;
-    --foreground: 210 40% 98%;
-    --card: 215 50% 15%;
-    --card-foreground: 210 40% 98%;
-    --popover: 215 50% 15%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 38 45% 60%;
-    --primary-foreground: 215 50% 15%;
-    --secondary: 217 33% 18%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 18%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 18%;
-    --accent-foreground: 210 40% 98%;
+    --background: 165 15% 14%;
+    --foreground: 43 20% 93%;
+
+    --card: 165 15% 18%;
+    --card-foreground: 43 20% 93%;
+
+    --popover: 165 15% 18%;
+    --popover-foreground: 43 20% 93%;
+
+    --primary: 168 38% 46%;
+    --primary-foreground: 165 40% 12%;
+
+    --secondary: 165 15% 22%;
+    --secondary-foreground: 43 20% 93%;
+
+    --muted: 165 15% 22%;
+    --muted-foreground: 168 15% 58%;
+
+    --accent: 165 20% 26%;
+    --accent-foreground: 43 20% 93%;
+
     --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 18%;
-    --input: 217 33% 18%;
-    --ring: 213 27% 84%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --destructive-foreground: 43 20% 93%;
+
+    --border: 165 15% 24%;
+    --input: 165 15% 24%;
+    --ring: 168 38% 46%;
+
+    --sidebar-background: 165 15% 14%;
+    --sidebar-foreground: 43 20% 93%;
+    --sidebar-primary: 168 38% 46%;
+    --sidebar-primary-foreground: 165 40% 12%;
+    --sidebar-accent: 165 15% 22%;
+    --sidebar-accent-foreground: 43 20% 93%;
+    --sidebar-border: 165 15% 24%;
+    --sidebar-ring: 168 38% 46%;
   }
 }
 
@@ -98,4 +109,43 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
   }
+}
+
+@layer utilities {
+  .bg-navy        { background-color: hsl(var(--navy)); }
+  .bg-navy-dark   { background-color: hsl(var(--navy-dark)); }
+  .bg-navy-light  { background-color: hsl(var(--navy-light)); }
+  .text-navy      { color: hsl(var(--navy)); }
+
+  .bg-gold        { background-color: hsl(var(--gold)); }
+  .bg-gold-light  { background-color: hsl(var(--gold-light)); }
+  .bg-gold-dark   { background-color: hsl(var(--gold-dark)); }
+  .text-gold      { color: hsl(var(--gold)); }
+  .text-gold-light { color: hsl(var(--gold-light)); }
+  .fill-gold      { fill: hsl(var(--gold)); }
+
+  .bg-navy\/70         { background-color: hsl(var(--navy) / 0.70); }
+  .bg-navy\/80         { background-color: hsl(var(--navy) / 0.80); }
+  .bg-gold\/10         { background-color: hsl(var(--gold) / 0.10); }
+  .bg-gold\/20         { background-color: hsl(var(--gold) / 0.20); }
+  .bg-gold\/30         { background-color: hsl(var(--gold) / 0.30); }
+  .bg-navy-light\/20   { background-color: hsl(var(--navy-light) / 0.20); }
+  .bg-navy-light\/30   { background-color: hsl(var(--navy-light) / 0.30); }
+  .bg-navy-light\/40   { background-color: hsl(var(--navy-light) / 0.40); }
+  .bg-navy-light\/50   { background-color: hsl(var(--navy-light) / 0.50); }
+
+  .border-navy-light\/20 { border-color: hsl(var(--navy-light) / 0.20); }
+  .border-navy-light\/30 { border-color: hsl(var(--navy-light) / 0.30); }
+  .border-gold\/30       { border-color: hsl(var(--gold) / 0.30); }
+  .border-gold\/50       { border-color: hsl(var(--gold) / 0.50); }
+
+  .hover\:bg-gold-light:hover       { background-color: hsl(var(--gold-light)); }
+  .hover\:text-gold:hover           { color: hsl(var(--gold)); }
+  .hover\:border-gold:hover         { border-color: hsl(var(--gold)); }
+  .hover\:bg-navy-light\/50:hover   { background-color: hsl(var(--navy-light) / 0.50); }
+  .hover\:bg-gold\/20:hover         { background-color: hsl(var(--gold) / 0.20); }
+  .hover\:border-gold\/30:hover     { border-color: hsl(var(--gold) / 0.30); }
+
+  .focus\:ring-gold\/50:focus   { --tw-ring-color: hsl(var(--gold) / 0.50); }
+  .focus\:border-gold\/50:focus { border-color: hsl(var(--gold) / 0.50); }
 }
