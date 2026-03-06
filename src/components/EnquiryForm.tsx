@@ -69,6 +69,7 @@ const EnquiryForm = () => {
 
 
 
+
       // silently handle - show success anyway per spec
     }setSubmitted(true);};const stepLabels = ["About You", "Journey", "Locations", "Date & Time", "Extras"];if (submitted) {return <section id="enquiry" className="bg-navy py-20 lg:py-28">
         <div className="mx-auto max-w-2xl px-6 text-center">
@@ -132,8 +133,7 @@ const EnquiryForm = () => {
             </div>}
 
           {/* Step 2: Journey */}
-          {step === 2 &&
-        <div className="space-y-5">
+          {step === 2 && <div className="space-y-5">
               <div>
                 <h3 className="font-serif text-lg font-bold text-primary-foreground">Journey Details</h3>
                 <p className="text-sm text-primary-foreground/60 mt-1">What kind of trip are you planning?</p>
