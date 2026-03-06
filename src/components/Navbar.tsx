@@ -41,7 +41,7 @@ const Navbar = () => {
             href="#enquiry"
             className="rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-navy transition-colors hover:bg-gold-light">
             
-            Get a Quote
+            ​Book Now 
           </a>
         </div>
 
