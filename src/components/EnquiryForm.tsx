@@ -79,6 +79,8 @@ const EnquiryForm = () => {
 
 
 
+
+
       // silently handle - show success anyway per spec
     }setSubmitted(true);};const stepLabels = ["About You", "Journey", "Locations", "Date & Time", "Extras"];if (submitted) {return <section id="enquiry" className="bg-navy py-20 lg:py-28">
         <div className="mx-auto max-w-2xl px-6 text-center">
@@ -127,8 +129,8 @@ const EnquiryForm = () => {
                 <h3 className="font-serif text-lg font-bold text-primary-foreground">Your Details</h3>
                 <p className="text-sm mt-1 text-navy-light">So we know who to send the quote to.</p>
               </div>
-              <div className="text-navy-dark">
-                <label className="">Full Name</label>
+              <div className="text-navy-light">
+                <label className="text-primary-foreground">Full Name</label>
                 <input className={inputClass} placeholder="e.g. John Smith" value={formData.fullName} onChange={(e) => update("fullName", e.target.value)} />
               </div>
               <div>
@@ -193,9 +195,7 @@ const EnquiryForm = () => {
               <div>
                 <label className={labelClass}>Return Journey Needed?</label>
                 <div className="flex gap-4 mt-2">
-                  <button type="button" onClick={() => setReturnJourney(true)} className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                returnJourney ? "bg-gold text-navy" : "bg-navy-light/30 text-primary-foreground/60 hover:bg-navy-light/50"}`
-                }>
+                  <button type="button" onClick={() => setReturnJourney(true)} className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${returnJourney ? "bg-gold text-navy" : "bg-navy-light/30 text-primary-foreground/60 hover:bg-navy-light/50"}`}>
                   
                     Yes
                   </button>
