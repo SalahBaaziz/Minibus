@@ -79,6 +79,7 @@ const EnquiryForm = () => {
 
 
 
+
       // silently handle - show success anyway per spec
     }setSubmitted(true);};const stepLabels = ["Journey", "Locations", "Date & Time", "Extras", "About You"];if (submitted) {return <section id="enquiry" className="bg-navy py-20 lg:py-28">
         <div className="mx-auto max-w-2xl px-6 text-center">
@@ -138,8 +139,7 @@ const EnquiryForm = () => {
               </div>
               <div>
                 <label className={labelClass}>How many passengers?</label>
-                <select className={inputClass} value={formData.passengers}
-              onChange={(e) => update("passengers", e.target.value)}>
+                <select className={inputClass} value={formData.passengers} onChange={(e) => update("passengers", e.target.value)}>
                 
                   <option value="">Select a range</option>
                   {passengerRanges.map((r) =>
@@ -274,7 +274,7 @@ const EnquiryForm = () => {
         <div className="space-y-5 text-navy-light">
               <div className="text-base">
                 <h3 className="font-serif text-lg font-bold text-primary-foreground">Almost Done!</h3>
-                <p className="text-sm mt-1 text-navy-dark">Where should we send your quote?</p>
+                <p className="text-sm mt-1 text-primary-foreground">Where should we send your quote?</p>
               </div>
               <div className="text-navy-light">
                 <label className="text-primary-foreground">Full Name</label>
