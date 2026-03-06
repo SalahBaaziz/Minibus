@@ -97,7 +97,7 @@ const EnquiryForm = () => {
       <div className="mx-auto max-w-2xl px-6">
         <div className="text-center mb-12">
           <p className="text-sm font-semibold uppercase tracking-widest text-gold">
-            Get a Free Quote
+            Get a Price - within the hour      
           </p>
           <h2 className="mt-3 font-serif text-3xl sm:text-4xl font-medium text-navy-dark">
             Tell Us About Your Journey
