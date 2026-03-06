@@ -68,6 +68,7 @@ const EnquiryForm = () => {
 
 
 
+
       // silently handle - show success anyway per spec
     }setSubmitted(true);};const stepLabels = ["About You", "Journey", "Locations", "Date & Time", "Extras"];if (submitted) {return <section id="enquiry" className="bg-navy py-20 lg:py-28">
         <div className="mx-auto max-w-2xl px-6 text-center">
@@ -109,7 +110,7 @@ const EnquiryForm = () => {
             </div>)}
         </div>
 
-        <div className="rounded-xl border border-navy-light/30 p-8 bg-navy-light">
+        <div className="rounded-xl border border-navy-light/30 p-8 bg-gold-light">
           {/* Step 1: About You */}
           {step === 1 && <div className="space-y-5">
               <div>
@@ -128,8 +129,7 @@ const EnquiryForm = () => {
                 <label className={labelClass}>Phone Number</label>
                 <input className={inputClass} type="tel" placeholder="e.g. 07700 900000" value={formData.phone} onChange={(e) => update("phone", e.target.value)} />
               </div>
-            </div>
-        }
+            </div>}
 
           {/* Step 2: Journey */}
           {step === 2 &&
