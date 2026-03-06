@@ -70,6 +70,7 @@ const EnquiryForm = () => {
 
 
 
+
       // silently handle - show success anyway per spec
     }setSubmitted(true);};const stepLabels = ["Journey", "Locations", "Date & Time", "Extras", "About You"];if (submitted) {return <section id="enquiry" className="bg-navy py-20 lg:py-28">
         <div className="mx-auto max-w-2xl px-6 text-center">
@@ -108,11 +109,10 @@ const EnquiryForm = () => {
               </div>
               <span className="hidden sm:inline text-xs text-navy-dark">{label}</span>
               {i < stepLabels.length - 1 && <div className="w-6 h-px bg-navy-light/30" />}
-            </div>
-        )}
+            </div>)}
         </div>
 
-        <div className="rounded-xl border border-navy-light/30 p-8 bg-primary">
+        <div className="rounded-xl border border-navy-light/30 p-8 bg-gold-dark">
 
           {/* Step 1: Journey */}
           {step === 1 &&
