@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,161 +6,230 @@
 
 @layer base {
 
-  :root {
+:root {
 
-    /* PAGE */
-    --background: 210 6% 96%;
-    --foreground: 210 15% 12%;
+/* COLOURS */
 
-    /* SURFACES */
-    --card: 0 0% 100%;
-    --card-foreground: 210 15% 12%;
+--background: 210 6% 96%;
+--foreground: 210 15% 12%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 15% 12%;
+--card: 0 0% 100%;
+--card-foreground: 210 15% 12%;
 
-    /* PRIMARY (TEAL BUTTONS) */
-    --primary: 170 28% 46%;
-    --primary-foreground: 0 0% 100%;
+--popover: 0 0% 100%;
+--popover-foreground: 210 15% 12%;
 
-    /* SECONDARY TEXT */
-    --secondary: 210 10% 30%;
-    --secondary-foreground: 0 0% 100%;
+--primary: 170 28% 46%;
+--primary-foreground: 0 0% 100%;
 
-    /* MUTED */
-    --muted: 210 8% 90%;
-    --muted-foreground: 210 10% 40%;
+--secondary: 210 10% 30%;
+--secondary-foreground: 0 0% 100%;
 
-    /* ACCENT */
-    --accent: 170 28% 46%;
-    --accent-foreground: 0 0% 100%;
+--muted: 210 8% 90%;
+--muted-foreground: 210 10% 40%;
 
-    /* ERROR */
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 100%;
+--accent: 170 28% 46%;
+--accent-foreground: 0 0% 100%;
 
-    /* BORDERS */
-    --border: 210 12% 85%;
-    --input: 210 12% 85%;
-    --ring: 170 28% 46%;
+--destructive: 0 70% 50%;
+--destructive-foreground: 0 0% 100%;
 
-    --radius: 0.75rem;
+--border: 210 12% 85%;
+--input: 210 12% 85%;
+--ring: 170 28% 46%;
 
-    /* NAV / HERO OVERLAY */
-    --navy: 210 10% 18%;
-    --navy-dark: 210 12% 12%;
-    --navy-light: 210 8% 28%;
+--radius: 0.75rem;
 
-    /* ACCENT TEAL */
-    --gold: 170 28% 46%;
-    --gold-light: 170 32% 54%;
-    --gold-dark: 170 30% 36%;
+/* NAV / HERO */
 
-    /* SIDEBAR */
-    --sidebar-background: 210 10% 18%;
-    --sidebar-foreground: 0 0% 96%;
+--navy: 210 10% 18%;
+--navy-dark: 210 12% 12%;
+--navy-light: 210 8% 28%;
 
-    --sidebar-primary: 170 28% 46%;
-    --sidebar-primary-foreground: 0 0% 100%;
+/* TEAL ACCENT */
 
-    --sidebar-accent: 210 8% 28%;
-    --sidebar-accent-foreground: 0 0% 96%;
+--gold: 170 28% 46%;
+--gold-light: 170 32% 54%;
+--gold-dark: 170 30% 36%;
 
-    --sidebar-border: 210 10% 24%;
-    --sidebar-ring: 170 28% 46%;
-  }
+/* TYPOGRAPHY */
 
-  .dark {
+--font-sans: 'Inter', system-ui, sans-serif;
+--font-serif: 'Playfair Display', Georgia, serif;
 
-    --background: 210 12% 12%;
-    --foreground: 0 0% 96%;
+--text-xs: 0.75rem;
+--text-sm: 0.875rem;
+--text-base: 1rem;
+--text-lg: 1.125rem;
+--text-xl: 1.25rem;
+--text-2xl: 1.5rem;
+--text-3xl: 2rem;
+--text-4xl: 2.75rem;
+--text-5xl: 3.5rem;
 
-    --card: 210 12% 14%;
-    --card-foreground: 0 0% 96%;
+/* SHADOWS */
 
-    --popover: 210 12% 16%;
-    --popover-foreground: 0 0% 96%;
+--shadow-sm: 0 1px 2px rgb(0 0 0 / 0.06);
+--shadow: 0 2px 6px rgb(0 0 0 / 0.08);
+--shadow-lg: 0 10px 25px rgb(0 0 0 / 0.12);
 
-    --primary: 170 32% 54%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 210 8% 28%;
-    --secondary-foreground: 0 0% 96%;
-
-    --muted: 210 8% 28%;
-    --muted-foreground: 210 10% 70%;
-
-    --accent: 170 28% 46%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 210 10% 24%;
-    --input: 210 10% 24%;
-    --ring: 170 32% 54%;
-
-    --sidebar-background: 210 12% 12%;
-    --sidebar-foreground: 0 0% 96%;
-
-    --sidebar-primary: 170 32% 54%;
-    --sidebar-primary-foreground: 0 0% 100%;
-
-    --sidebar-accent: 210 8% 28%;
-    --sidebar-accent-foreground: 0 0% 96%;
-
-    --sidebar-border: 210 10% 24%;
-    --sidebar-ring: 170 32% 54%;
-  }
 }
 
-@layer base {
+.dark {
 
-  * {
-    @apply border-border;
-  }
+--background: 210 12% 12%;
+--foreground: 0 0% 96%;
 
-  body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Inter', sans-serif;
-  }
+--card: 210 12% 14%;
+--card-foreground: 0 0% 96%;
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
-  }
+--popover: 210 12% 16%;
+--popover-foreground: 0 0% 96%;
+
+--primary: 170 32% 54%;
+--primary-foreground: 0 0% 100%;
+
+--secondary: 210 8% 28%;
+--secondary-foreground: 0 0% 96%;
+
+--muted: 210 8% 28%;
+--muted-foreground: 210 10% 70%;
+
+--accent: 170 28% 46%;
+--accent-foreground: 0 0% 100%;
+
+--border: 210 10% 24%;
+--input: 210 10% 24%;
+--ring: 170 32% 54%;
+
+}
+
+* {
+@apply border-border;
+}
+
+html {
+font-size: 16px;
+}
+
+body {
+@apply bg-background text-foreground;
+font-family: var(--font-sans);
+font-size: var(--text-base);
+line-height: 1.6;
+font-weight: 400;
+}
+
+/* HEADINGS MATCH HERO STYLE */
+
+h1 {
+font-family: var(--font-serif);
+font-size: var(--text-5xl);
+font-weight: 600;
+line-height: 1.2;
+letter-spacing: -0.02em;
+}
+
+h2 {
+font-family: var(--font-serif);
+font-size: var(--text-4xl);
+font-weight: 600;
+line-height: 1.25;
+}
+
+h3 {
+font-family: var(--font-serif);
+font-size: var(--text-3xl);
+font-weight: 600;
+}
+
+h4 {
+font-family: var(--font-serif);
+font-size: var(--text-2xl);
+font-weight: 500;
+}
+
+h5 {
+font-family: var(--font-serif);
+font-size: var(--text-xl);
+font-weight: 500;
+}
+
+h6 {
+font-family: var(--font-serif);
+font-size: var(--text-lg);
+font-weight: 500;
+}
+
+p {
+font-size: var(--text-base);
+color: hsl(var(--muted-foreground));
+}
+
+/* NAVBAR */
+
+nav {
+font-family: var(--font-sans);
+font-size: var(--text-sm);
+font-weight: 500;
+letter-spacing: 0.04em;
+}
+
+/* BUTTONS */
+
+button {
+font-family: var(--font-sans);
+font-weight: 500;
+font-size: var(--text-sm);
+}
+
+/* HERO SUBTITLE */
+
+.hero-subtitle {
+font-size: var(--text-sm);
+letter-spacing: 0.15em;
+text-transform: uppercase;
+font-weight: 600;
+color: hsl(var(--gold));
+}
+
+/* HERO PARAGRAPH */
+
+.hero-text {
+font-size: var(--text-lg);
+color: rgb(255 255 255 / 0.85);
+}
+
 }
 
 @layer utilities {
 
-  .bg-navy { background-color: hsl(var(--navy)); }
-  .bg-navy-dark { background-color: hsl(var(--navy-dark)); }
-  .bg-navy-light { background-color: hsl(var(--navy-light)); }
+.bg-navy { background-color: hsl(var(--navy)); }
+.bg-navy-dark { background-color: hsl(var(--navy-dark)); }
+.bg-navy-light { background-color: hsl(var(--navy-light)); }
 
-  .text-navy { color: hsl(var(--navy)); }
+.text-navy { color: hsl(var(--navy)); }
 
-  .bg-gold { background-color: hsl(var(--gold)); }
-  .bg-gold-light { background-color: hsl(var(--gold-light)); }
-  .bg-gold-dark { background-color: hsl(var(--gold-dark)); }
+.bg-gold { background-color: hsl(var(--gold)); }
+.bg-gold-light { background-color: hsl(var(--gold-light)); }
+.bg-gold-dark { background-color: hsl(var(--gold-dark)); }
 
-  .text-gold { color: hsl(var(--gold)); }
-  .text-gold-light { color: hsl(var(--gold-light)); }
+.text-gold { color: hsl(var(--gold)); }
+.text-gold-light { color: hsl(var(--gold-light)); }
 
-  .fill-gold { fill: hsl(var(--gold)); }
+.fill-gold { fill: hsl(var(--gold)); }
 
-  .bg-navy\/70 { background-color: hsl(var(--navy) / 0.70); }
-  .bg-navy\/80 { background-color: hsl(var(--navy) / 0.80); }
+.bg-navy\/70 { background-color: hsl(var(--navy) / 0.70); }
+.bg-navy\/80 { background-color: hsl(var(--navy) / 0.80); }
 
-  .bg-gold\/10 { background-color: hsl(var(--gold) / 0.10); }
-  .bg-gold\/20 { background-color: hsl(var(--gold) / 0.20); }
-  .bg-gold\/30 { background-color: hsl(var(--gold) / 0.30); }
+.bg-gold\/10 { background-color: hsl(var(--gold) / 0.10); }
+.bg-gold\/20 { background-color: hsl(var(--gold) / 0.20); }
 
-  .border-gold\/30 { border-color: hsl(var(--gold) / 0.30); }
-  .border-gold\/50 { border-color: hsl(var(--gold) / 0.50); }
+.border-gold\/30 { border-color: hsl(var(--gold) / 0.30); }
 
-  .hover\:bg-gold-light:hover { background-color: hsl(var(--gold-light)); }
-  .hover\:text-gold:hover { color: hsl(var(--gold)); }
-  .hover\:border-gold:hover { border-color: hsl(var(--gold)); }
+.hover\:bg-gold-light:hover { background-color: hsl(var(--gold-light)); }
+.hover\:text-gold:hover { color: hsl(var(--gold)); }
 
-  .focus\:ring-gold\/50:focus { --tw-ring-color: hsl(var(--gold) / 0.50); }
-  .focus\:border-gold\/50:focus { border-color: hsl(var(--gold) / 0.50); }
+.focus\:ring-gold\/50:focus { --tw-ring-color: hsl(var(--gold) / 0.50); }
+
 }
