@@ -76,6 +76,9 @@ const EnquiryForm = () => {
 
 
 
+
+
+
       // silently handle - show success anyway per spec
     }setSubmitted(true);};const stepLabels = ["Journey", "Locations", "Date & Time", "Extras", "About You"];if (submitted) {return <section id="enquiry" className="bg-navy py-20 lg:py-28">
         <div className="mx-auto max-w-2xl px-6 text-center">
@@ -130,15 +133,12 @@ const EnquiryForm = () => {
                 <select className={inputClass} value={formData.journeyType} onChange={(e) => update("journeyType", e.target.value)}>
                 
                   <option value="">Select a journey type</option>
-                  {journeyTypes.map((t) => <option key={t} value={t}>{t}</option>
-              )}
+                  {journeyTypes.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
               <div>
                 <label className={labelClass}>How many passengers?</label>
-                <select
-              className={inputClass}
-              value={formData.passengers}
+                <select className={inputClass} value={formData.passengers}
               onChange={(e) => update("passengers", e.target.value)}>
                 
                   <option value="">Select a range</option>
@@ -313,7 +313,7 @@ const EnquiryForm = () => {
             {step > 1 ?
           <button
             onClick={() => setStep(step - 1)}
-            className="border border-navy-light/30 px-6 py-2.5 text-sm hover:border-gold/30 transition-colors bg-muted text-navy rounded-xl font-semibold">
+            className="px-6 py-2.5 text-sm transition-colors bg-muted text-navy rounded-xl font-semibold border-0 border-inherit">
               
                 Back
               </button> :
