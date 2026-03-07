@@ -231,82 +231,104 @@ const EnquiryForm = () => {
             </div>
           }
 
-          {/* STEP 3 – Date & Time */}
           {step === 3 &&
           <div className="space-y-5">
-              <div>
-                <h3 className="font-serif text-lg font-bold text-primary-foreground">
-                  When Do You Need Us?
-                </h3>
-                <p className="text-sm text-primary-foreground/60 mt-1">
-                  A rough date is fine if you're not sure yet.
-                </p>
-              </div>
-
-              <div>
-                <label className={labelClass}>Date of travel</label>
-                <input
+          
+            <div>
+              <h3 className="font-serif text-lg font-bold text-primary-foreground">
+                When Do You Need Us?
+              </h3>
+              <p className="text-sm text-primary-foreground/60 mt-1">
+                A rough estimate is fine if you're not sure yet.
+              </p>
+            </div>
+          
+            <div>
+              <label className={labelClass}>Date of travel</label>
+              <input
                 className={inputClass}
                 type="date"
                 value={formData.date}
-                onChange={(e) => update("date", e.target.value)} />
-              
-              </div>
-
-              <div>
-                <label className={labelClass}>Pick-up time</label>
-                <select
+                onChange={(e) => update("date", e.target.value)}
+              />
+            </div>
+          
+            <div>
+              <label className={labelClass}>Pick-up time</label>
+              <select
                 className={inputClass}
-                value={formData.time}
-                onChange={(e) => update("time", e.target.value)}>
-                
-                  <option value="">Select a time range</option>
-                  {pickupTimeRanges.map((t) =>
-                <option key={t} value={t}>{t}</option>
+                value={formData.pickupTime}
+                onChange={(e) => update("pickupTime", e.target.value)}
+              >
+                <option value="">Select a time range</option>
+                {pickupTimeRanges.map((t) =>
+                  <option key={t} value={t}>{t}</option>
                 )}
-                </select>
-              </div>
-
-              <div>
-                <label className={labelClass}>Do you need a return journey?</label>
-                <div className="flex gap-4 mt-2">
-                  <button
+              </select>
+            </div>
+          
+            <div>
+              <label className={labelClass}>Drop-off time (approx)</label>
+              <select
+                className={inputClass}
+                value={formData.dropoffTime}
+                onChange={(e) => update("dropoffTime", e.target.value)}
+              >
+                <option value="">Select a time range</option>
+                {pickupTimeRanges.map((t) =>
+                  <option key={t} value={t}>{t}</option>
+                )}
+              </select>
+            </div>
+          
+            <div>
+              <label className={labelClass}>Do you need a return journey?</label>
+              <div className="flex gap-4 mt-2">
+          
+                <button
                   type="button"
                   onClick={() => setReturnJourney(true)}
                   className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  returnJourney ?
-                  "bg-gold text-navy" :
-                  "bg-navy-light/30 text-primary-foreground/60 hover:bg-navy-light/50"}`
-                  }>
-                  
-                    Yes
-                  </button>
-                  <button
+                    returnJourney
+                      ? "bg-gold text-navy"
+                      : "bg-navy-light/30 text-primary-foreground/60 hover:bg-navy-light/50"
+                  }`}
+                >
+                  Yes
+                </button>
+          
+                <button
                   type="button"
                   onClick={() => setReturnJourney(false)}
                   className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  !returnJourney ?
-                  "bg-gold text-navy" :
-                  "bg-navy-light/30 text-primary-foreground/60 hover:bg-navy-light/50"}`
-                  }>
-                  
-                    No
-                  </button>
-                </div>
+                    !returnJourney
+                      ? "bg-gold text-navy"
+                      : "bg-navy-light/30 text-primary-foreground/60 hover:bg-navy-light/50"
+                  }`}
+                >
+                  No
+                </button>
+          
               </div>
-
-              {returnJourney &&
-            <div>
-                  <label className={labelClass}>Return pick-up time</label>
-                  <input
-                className={inputClass}
-                type="time"
-                value={formData.returnTime}
-                onChange={(e) => update("returnTime", e.target.value)} />
-              
-                </div>
-            }
             </div>
+          
+            {returnJourney &&
+            <div>
+              <label className={labelClass}>Return pick-up time</label>
+              <select
+                className={inputClass}
+                value={formData.returnTime}
+                onChange={(e) => update("returnTime", e.target.value)}
+              >
+                <option value="">Select a time range</option>
+                {pickupTimeRanges.map((t) =>
+                  <option key={t} value={t}>{t}</option>
+                )}
+              </select>
+            </div>
+            }
+          
+          </div>
           }
 
           {/* STEP 4 – Extras */}
