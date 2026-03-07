@@ -68,6 +68,14 @@ const formatDuration = (mins: number) => {
   return m > 0 ? `${h}h ${m}min` : `${h}h`;
 };
 
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return "Not specified";
+  const [y, m, d] = dateStr.split("-");
+  const months = ["January","February","March","April","May","June","July",
+                  "August","September","October","November","December"];
+  return `${parseInt(d)} ${months[parseInt(m) - 1]} ${y}`;
+};
+
 // ── Edge function ──────────────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
@@ -89,11 +97,9 @@ Deno.serve(async (req) => {
       journeyType,
       passengers,
       pickupAddress,
-      pickupCoords,
       dropoffAddress,
-      dropoffCoords,
       date,
-      time,
+      pickupTime,
       returnJourney,
       returnTime,
       distanceMiles,
@@ -108,7 +114,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const priceEstimate = calculatePrice(distanceMiles, passengers, time, journeyType);
+    const priceEstimate = calculatePrice(distanceMiles, passengers, pickupTime, journeyType);
 
     const emailHtml = `
 <!DOCTYPE html>
@@ -134,6 +140,7 @@ Deno.serve(async (req) => {
       <h1>New Minibus Enquiry</h1>
     </div>
     <div class="body">
+
       <div class="section">
         <h2>Customer Details</h2>
         <div class="row"><span class="label">Name</span><span class="value">${fullName}</span></div>
@@ -145,8 +152,8 @@ Deno.serve(async (req) => {
         <h2>Journey Details</h2>
         <div class="row"><span class="label">Occasion</span><span class="value">${journeyType || "Not specified"}</span></div>
         <div class="row"><span class="label">Passengers</span><span class="value">${passengers || "Not specified"}</span></div>
-        <div class="row"><span class="label">Date</span><span class="value">${date || "Not specified"}</span></div>
-        <div class="row"><span class="label">Time</span><span class="value">${time || "Not specified"}</span></div>
+        <div class="row"><span class="label">Date</span><span class="value">${formatDate(date)}</span></div>
+        <div class="row"><span class="label">Time</span><span class="value">${pickupTime || "Not specified"}</span></div>
         <div class="row"><span class="label">Return Journey</span><span class="value">${returnJourney ? `Yes – ${returnTime || "time TBC"}` : "No"}</span></div>
       </div>
 
@@ -167,6 +174,7 @@ Deno.serve(async (req) => {
         <h2>Additional Notes</h2>
         <p style="color:#555">${notes}</p>
       </div>` : ""}
+
     </div>
   </div>
 </body>
