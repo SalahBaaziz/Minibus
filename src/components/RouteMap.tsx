@@ -1,6 +1,47 @@
 import { useEffect, useState, useMemo, Component, type ReactNode } from "react";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { Loader2 } from "lucide-react";
 import type { LocationResult } from "./LocationAutocomplete";
+
+// Safe icon patch
+try {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  delete (L.Icon.Default.prototype as any)._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
+    iconUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+  });
+} catch {
+  // already patched
+}
+
+const pickupIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+const dropoffIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 export interface RouteInfo {
   distanceMiles: number;
@@ -24,7 +65,7 @@ class MapErrorBoundary extends Component<{ children: ReactNode }, EBState> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex items-center justify-center h-full text-xs text-red-400 p-4">
+        <div className="flex items-center justify-center rounded-lg border border-red-400/30 bg-red-400/10 h-20 text-xs text-red-400 p-4">
           Map failed to load: {this.state.message}
         </div>
       );
@@ -33,73 +74,33 @@ class MapErrorBoundary extends Component<{ children: ReactNode }, EBState> {
   }
 }
 
-// ── Inner map (only imported once we know we're on the client) ────────────────
+// ── FitBounds helper ──────────────────────────────────────────────────────────
+function FitBounds({ pickup, dropoff }: { pickup: LocationResult; dropoff: LocationResult }) {
+  const map = useMap();
+  useEffect(() => {
+    const bounds = L.latLngBounds(
+      [pickup.lat, pickup.lon],
+      [dropoff.lat, dropoff.lon]
+    );
+    map.fitBounds(bounds, { padding: [50, 50] });
+  }, [map, pickup.lat, pickup.lon, dropoff.lat, dropoff.lon]);
+  return null;
+}
+
 const OSRM_URL = "https://router.project-osrm.org/route/v1/driving";
 
-const LeafletMap = ({
-  pickup,
-  dropoff,
-  onRouteCalculated,
-}: RouteMapProps) => {
-  // Dynamic imports are resolved at module parse time in most bundlers,
-  // but we still gate rendering behind `isMounted` to avoid SSR crashes.
-  const {
-    MapContainer,
-    TileLayer,
-    Marker,
-    Popup,
-    Polyline,
-    useMap,
-  } = require("react-leaflet"); // eslint-disable-line @typescript-eslint/no-var-requires
-  const L = require("leaflet"); // eslint-disable-line @typescript-eslint/no-var-requires
-
-  // Safe icon patch
-  try {
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
-      iconUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-      shadowUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
-    });
-  } catch {
-    // already patched
-  }
-
-  const pickupIcon = new L.Icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
-    shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
-
-  const dropoffIcon = new L.Icon({
-    iconUrl:
-      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
-
+// ── Inner map ─────────────────────────────────────────────────────────────────
+const LeafletMap = ({ pickup, dropoff, onRouteCalculated }: RouteMapProps) => {
   const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const center = useMemo(() => {
+  const center = useMemo<[number, number]>(() => {
     if (pickup && dropoff)
-      return [(pickup.lat + dropoff.lat) / 2, (pickup.lon + dropoff.lon) / 2] as [number, number];
-    if (pickup) return [pickup.lat, pickup.lon] as [number, number];
-    if (dropoff) return [dropoff.lat, dropoff.lon] as [number, number];
-    return [53.8, -1.55] as [number, number];
+      return [(pickup.lat + dropoff.lat) / 2, (pickup.lon + dropoff.lon) / 2];
+    if (pickup) return [pickup.lat, pickup.lon];
+    if (dropoff) return [dropoff.lat, dropoff.lon];
+    return [53.8, -1.55];
   }, [pickup, dropoff]);
 
   useEffect(() => {
@@ -133,7 +134,7 @@ const LeafletMap = ({
           setRouteCoords(coords);
           onRouteCalculated({ distanceMiles, durationMinutes, routeCoords: coords });
         }
-      } catch (err) {
+      } catch {
         if (!cancelled) {
           setError("Could not calculate route. Please check your locations.");
           onRouteCalculated(null);
@@ -146,18 +147,8 @@ const LeafletMap = ({
 
     fetchRoute();
     return () => { cancelled = true; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pickup?.lat, pickup?.lon, dropoff?.lat, dropoff?.lon]);
-
-  // FitBounds sub-component defined inline so it can use the required `useMap`
-  const FitBoundsInner = ({ p, d }: { p: LocationResult; d: LocationResult }) => {
-    const map = useMap();
-    useEffect(() => {
-      const bounds = L.latLngBounds([p.lat, p.lon], [d.lat, d.lon]);
-      map.fitBounds(bounds, { padding: [50, 50] });
-    }, [map, p.lat, p.lon, d.lat, d.lon]);
-    return null;
-  };
 
   return (
     <>
@@ -168,11 +159,7 @@ const LeafletMap = ({
         </div>
       )}
       {error && <p className="text-xs text-red-400">{error}</p>}
-
-      <div
-        className="rounded-lg overflow-hidden border border-navy-light/30"
-        style={{ height: 300 }}
-      >
+      <div className="rounded-lg overflow-hidden border border-navy-light/30" style={{ height: 300 }}>
         <MapContainer
           center={center}
           zoom={10}
@@ -194,14 +181,9 @@ const LeafletMap = ({
             </Marker>
           )}
           {routeCoords.length > 0 && (
-            <Polyline
-              positions={routeCoords}
-              color="hsl(168, 32%, 45%)"
-              weight={4}
-              opacity={0.8}
-            />
+            <Polyline positions={routeCoords} color="hsl(168, 32%, 45%)" weight={4} opacity={0.8} />
           )}
-          {pickup && dropoff && <FitBoundsInner p={pickup} d={dropoff} />}
+          {pickup && dropoff && <FitBounds pickup={pickup} dropoff={dropoff} />}
         </MapContainer>
       </div>
     </>
@@ -210,17 +192,14 @@ const LeafletMap = ({
 
 // ── Public component ──────────────────────────────────────────────────────────
 const RouteMap = (props: RouteMapProps) => {
-  // Guard: only render the Leaflet tree once we are definitely on the client
   const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => setIsMounted(true), []);
+  useEffect(() => { setIsMounted(true); }, []);
 
-  const showMap = props.pickup || props.dropoff;
-  if (!showMap) return null;
+  if (!props.pickup && !props.dropoff) return null;
 
   return (
     <div className="mt-6 space-y-3">
       <h4 className="text-sm font-semibold text-primary-foreground/80">Route Preview</h4>
-
       {isMounted ? (
         <MapErrorBoundary>
           <LeafletMap {...props} />
