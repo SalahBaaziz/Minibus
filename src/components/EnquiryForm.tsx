@@ -14,7 +14,7 @@ const journeyTypes = [
 "Other"];
 
 
-const passengerRanges = ["1–4", "5–8", "9–12", "13–16", "Not sure yet"];
+const passengerRanges = Array.from({ length: 16 }, (_, i) => i + 1);
 
 const pickupTimeRanges = [
 "Early Morning (05:00 – 08:00)",
