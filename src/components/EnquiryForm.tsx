@@ -268,20 +268,6 @@ const EnquiryForm = () => {
             </div>
           
             <div>
-              <label className={labelClass}>Drop-off time (approx)</label>
-              <select
-                className={inputClass}
-                value={formData.dropoffTime}
-                onChange={(e) => update("dropoffTime", e.target.value)}
-              >
-                <option value="">Select a time range</option>
-                {pickupTimeRanges.map((t) =>
-                  <option key={t} value={t}>{t}</option>
-                )}
-              </select>
-            </div>
-          
-            <div>
               <label className={labelClass}>Do you need a return journey?</label>
               <div className="flex gap-4 mt-2">
           
