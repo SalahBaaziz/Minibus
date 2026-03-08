@@ -89,7 +89,7 @@ Deno.serve(async (req) => {
       const enquiry = await findLatestEnquiry(supabase, "pending");
 
       if (!enquiry) {
-        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
           `No pending enquiries found.`);
         return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
       }
