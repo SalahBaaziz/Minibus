@@ -165,7 +165,7 @@ const AnalyticsTab = () => {
             <CardTitle className="text-xs sm:text-sm font-semibold">Journey Types</CardTitle>
           </CardHeader>
           <CardContent className="px-1 sm:px-6">
-            <div className="h-[220px] sm:h-[280px] w-full">
+            <div className="h-[180px] sm:h-[280px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -173,11 +173,11 @@ const AnalyticsTab = () => {
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
-                    cy="45%"
-                    innerRadius={50}
-                    outerRadius={85}
+                    cy="50%"
+                    innerRadius={isMobile ? 35 : 50}
+                    outerRadius={isMobile ? 60 : 85}
                     paddingAngle={3}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={isMobile ? false : ({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   >
                     {journeyTypeData.map((_, i) => (
                       <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
