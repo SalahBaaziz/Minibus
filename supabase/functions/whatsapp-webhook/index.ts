@@ -11,6 +11,9 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const emptyTwiml = `<?xml version="1.0" encoding="UTF-8"?><Response></Response>`;
+  const xmlHeaders = { ...corsHeaders, "Content-Type": "text/xml" };
+
   try {
     const TWILIO_ACCOUNT_SID = Deno.env.get("TWILIO_ACCOUNT_SID");
     const TWILIO_AUTH_TOKEN = Deno.env.get("TWILIO_AUTH_TOKEN");
@@ -19,24 +22,27 @@ Deno.serve(async (req) => {
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_WHATSAPP_NUMBER || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      throw new Error("Missing required environment variables");
+    if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_WHATSAPP_NUMBER || !BUSINESS_WHATSAPP_NUMBER || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      console.error("Missing required environment variables");
+      return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
+    // Parse incoming Twilio webhook
     const formData = await req.formData();
-    const from = formData.get("From") as string || "";
-    const fromNumber = from.replace("whatsapp:", "").trim(); // Strip prefix for sendWhatsApp
-
-    console.log(`Received WhatsApp from ${from}: ${body}`);
-
-    const emptyTwiml = `<?xml version="1.0" encoding="UTF-8"?><Response></Response>`;
-    const xmlHeaders = { ...corsHeaders, "Content-Type": "text/xml" };
-
+    const body = (formData.get("Body") as string || "").trim();
+    const fromRaw = formData.get("From") as string || "";
+    
+    // Strip whatsapp: prefix for use with sendWhatsApp (which adds it back)
+    const fromNumber = fromRaw.replace("whatsapp:", "").trim();
+    
+    // Normalize business number for comparison
     const normBusiness = BUSINESS_WHATSAPP_NUMBER.replace(/[^0-9+]/g, "");
-    const normFrom = from.replace(/[^0-9+]/g, "");
+    const normFrom = fromNumber.replace(/[^0-9+]/g, "");
     const isOwner = normFrom === normBusiness;
+
+    console.log(`Received WhatsApp from ${fromNumber} (isOwner: ${isOwner}): ${body}`);
 
     // ── OWNER: YES (accept quote) ──────────────────────────────────────
     if (/^YES$/i.test(body) && isOwner) {
@@ -50,12 +56,16 @@ Deno.serve(async (req) => {
 
       await supabase.from("enquiries").update({ status: "offered" }).eq("id", enquiry.id);
 
+      // Send quote to client
       const clientPhone = formatClientPhone(enquiry.phone);
+      console.log(`Sending quote to client: ${clientPhone}`);
+      
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
         clientPhone, buildClientOffer(enquiry, enquiry.estimated_price));
 
+      // Confirm to owner
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
-        `Quote of £${enquiry.estimated_price} sent to ${enquiry.full_name} for confirmation.`);
+        `✅ Quote of £${enquiry.estimated_price} sent to ${enquiry.full_name} for confirmation.`);
 
       return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
     }
@@ -77,7 +87,7 @@ Deno.serve(async (req) => {
         clientPhone, `Hi ${enquiry.full_name}, unfortunately we're unable to accommodate your booking request at this time. Thank you for considering Yorkshire Minibus.`);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
-        `Enquiry from ${enquiry.full_name} has been declined.`);
+        `❌ Enquiry from ${enquiry.full_name} has been declined.`);
 
       return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
     }
@@ -103,14 +113,14 @@ Deno.serve(async (req) => {
         clientPhone, buildClientOffer(enquiry, newPrice));
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
-        `Custom quote of £${newPrice} sent to ${enquiry.full_name} for confirmation.`);
+        `✅ Custom quote of £${newPrice} sent to ${enquiry.full_name} for confirmation.`);
 
       return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
     }
 
     // ── CLIENT: YES (confirm booking) ───────────────────────────────────
     if (/^YES$/i.test(body) && !isOwner) {
-      const enquiry = await findEnquiryByClientPhone(supabase, from, "offered");
+      const enquiry = await findEnquiryByClientPhone(supabase, fromNumber, "offered");
 
       if (!enquiry) {
         await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
@@ -133,13 +143,14 @@ Deno.serve(async (req) => {
         });
         const paymentData = await paymentResponse.json();
         paymentUrl = paymentData.url || "";
+        console.log("Payment link created:", paymentUrl);
       } catch (e) {
         console.error("Failed to create payment link:", e);
       }
 
       // Send payment link to client
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
-        `*Booking Confirmed!*
+        `🎉 *Booking Confirmed!*
 
 Your ${enquiry.journey_type || "minibus"} trip on ${formatDate(enquiry.date)} is locked in at £${enquiry.estimated_price}.
 
@@ -149,10 +160,10 @@ ${paymentUrl || "Payment link will be sent shortly."}
 
 Thank you for choosing Yorkshire Minibus!`);
 
-      // Notify owner
+      // Notify owner (use normalized business number)
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
-        BUSINESS_WHATSAPP_NUMBER,
-        `*BOOKING CONFIRMED*
+        normBusiness,
+        `🎉 *BOOKING CONFIRMED*
 
 ${enquiry.full_name} has confirmed their booking. Payment link sent.
 
@@ -181,7 +192,7 @@ ${enquiry.email}`);
 
     // ── CLIENT: NO (reject quote) ───────────────────────────────────────
     if (/^NO$/i.test(body) && !isOwner) {
-      const enquiry = await findEnquiryByClientPhone(supabase, from, "offered");
+      const enquiry = await findEnquiryByClientPhone(supabase, fromNumber, "offered");
 
       if (!enquiry) {
         await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
@@ -195,8 +206,8 @@ ${enquiry.email}`);
         `We're sorry to hear that. If you'd like to discuss the price, feel free to give us a call. Thanks for considering Yorkshire Minibus!`);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
-        BUSINESS_WHATSAPP_NUMBER,
-        `*QUOTE REJECTED*
+        normBusiness,
+        `❌ *QUOTE REJECTED*
 
 ${enquiry.full_name} has declined the quote.
 
@@ -213,13 +224,11 @@ ${enquiry.phone}`);
       return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
     }
 
+    console.log(`Unrecognized message: "${body}" from ${fromNumber}`);
     return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
   } catch (error: unknown) {
     console.error("Webhook error:", error);
-    return new Response(
-      `<?xml version="1.0" encoding="UTF-8"?><Response></Response>`,
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "text/xml" } }
-    );
+    return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
   }
 });
 
@@ -232,13 +241,16 @@ async function findLatestEnquiry(supabase: any, status: string) {
     .eq("status", status)
     .order("created_at", { ascending: false })
     .limit(1);
-  if (error) throw error;
+  if (error) {
+    console.error("findLatestEnquiry error:", error);
+    throw error;
+  }
   return data && data.length > 0 ? data[0] : null;
 }
 
-async function findEnquiryByClientPhone(supabase: any, whatsappFrom: string, status: string) {
-  // Extract raw number from "whatsapp:+44..."
-  const rawNumber = whatsappFrom.replace("whatsapp:", "").trim();
+async function findEnquiryByClientPhone(supabase: any, phoneNumber: string, status: string) {
+  // phoneNumber is already stripped of whatsapp: prefix, e.g. +447368832422
+  const rawNumber = phoneNumber.trim();
 
   // Build possible phone formats to match against stored phone
   const possibleFormats: string[] = [rawNumber];
@@ -246,22 +258,33 @@ async function findEnquiryByClientPhone(supabase: any, whatsappFrom: string, sta
     possibleFormats.push("0" + rawNumber.slice(3)); // +447xxx -> 07xxx
     possibleFormats.push(rawNumber.slice(1));         // +447xxx -> 447xxx
   }
+  if (rawNumber.startsWith("0")) {
+    possibleFormats.push("+44" + rawNumber.slice(1)); // 07xxx -> +447xxx
+  }
+
+  console.log(`Looking for enquiry with phone matching: ${JSON.stringify(possibleFormats)}`);
 
   const { data, error } = await supabase
     .from("enquiries")
     .select("*")
     .eq("status", status)
     .order("created_at", { ascending: false });
-  if (error) throw error;
+  if (error) {
+    console.error("findEnquiryByClientPhone error:", error);
+    throw error;
+  }
   if (!data) return null;
 
   // Match by normalised phone
   for (const enquiry of data) {
     const stored = enquiry.phone.replace(/\s+/g, "");
     if (possibleFormats.some(f => f === stored || stored === f)) {
+      console.log(`Found matching enquiry: ${enquiry.id}`);
       return enquiry;
     }
   }
+  
+  console.log("No matching enquiry found");
   return null;
 }
 
@@ -274,13 +297,15 @@ function formatClientPhone(phone: string): string {
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return "your requested date";
-  const [y, m, d] = dateStr.split("-");
+  const parts = dateStr.split("-");
+  if (parts.length !== 3) return dateStr;
+  const [y, m, d] = parts;
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   return `${parseInt(d)} ${months[parseInt(m) - 1]} ${y}`;
 }
 
 function buildClientOffer(enquiry: any, price: number | null): string {
-  return `Hi ${enquiry.full_name}!
+  return `Hi ${enquiry.full_name}! 👋
 
 Great news — Yorkshire Minibus has come back with a quote for your trip:
 
@@ -297,7 +322,7 @@ To: ${enquiry.dropoff_address || "TBC"}
 💰 *Price*
 £${price || "TBC"}
 
-Would you like to confirm this booking? Reply YES or NO.`;
+Would you like to confirm this booking? Reply *YES* or *NO*.`;
 }
 
 async function sendWhatsApp(
@@ -306,10 +331,15 @@ async function sendWhatsApp(
 ) {
   const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
 
+  // Ensure 'to' doesn't already have whatsapp: prefix
+  const cleanTo = to.replace("whatsapp:", "").trim();
+
   const params = new URLSearchParams();
   params.append("From", `whatsapp:${fromNumber}`);
-  params.append("To", `whatsapp:${to}`);
+  params.append("To", `whatsapp:${cleanTo}`);
   params.append("Body", body);
+
+  console.log(`Sending WhatsApp: From whatsapp:${fromNumber} To whatsapp:${cleanTo}`);
 
   const res = await fetch(url, {
     method: "POST",
@@ -325,5 +355,7 @@ async function sendWhatsApp(
     console.error("Twilio send error:", data);
     throw new Error(`Twilio error: ${JSON.stringify(data)}`);
   }
+  
+  console.log(`WhatsApp sent successfully: ${data.sid}`);
   return data;
 }
