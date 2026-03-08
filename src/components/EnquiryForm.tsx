@@ -1,9 +1,12 @@
 import { useState, useRef, useCallback } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import LocationAutocomplete, { type LocationResult } from "./LocationAutocomplete";
 import RouteMap, { type RouteInfo } from "./RouteMap";
-import RouteInfoDisplay from "./RouteInfo";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Calendar } from "./ui/calendar";
 
 const journeyTypes = [
 "Wedding",
