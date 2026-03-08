@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import LocationAutocomplete, { type LocationResult } from "./LocationAutocomplete";
@@ -26,7 +26,16 @@ const pickupTimeRanges = [
 
 
 const EnquiryForm = () => {
+  const formRef = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(1);
+
+  const goToStep = useCallback((newStep: number) => {
+    setStep(newStep);
+    // Prevent browser from scrolling away from the form
+    requestAnimationFrame(() => {
+      formRef.current?.scrollIntoView({ behavior: "instant", block: "nearest" });
+    });
+  }, []);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -176,7 +185,7 @@ const EnquiryForm = () => {
           )}
         </div>
 
-        <div className="rounded-xl border border-navy-light/30 p-8 bg-gold-dark">
+        <div ref={formRef} className="rounded-xl border border-navy-light/30 p-8 bg-gold-dark">
           {/* STEP 1 – Journey */}
           {step === 1 &&
           <div className="space-y-5">
@@ -446,7 +455,7 @@ const EnquiryForm = () => {
           <div className="mt-8 flex justify-between">
             {step > 1 ?
             <button
-              onClick={() => setStep(step - 1)}
+              onClick={() => goToStep(step - 1)}
               className="px-6 py-2.5 text-sm transition-colors bg-muted text-navy rounded-xl font-semibold border-0">
               
                 Back
@@ -457,7 +466,7 @@ const EnquiryForm = () => {
 
             {step < 5 ?
             <button
-              onClick={() => setStep(step + 1)}
+              onClick={() => goToStep(step + 1)}
               className="px-6 py-2.5 text-sm font-semibold text-navy transition-colors rounded-xl bg-muted">
               
                 Next
