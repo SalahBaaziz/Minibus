@@ -455,7 +455,7 @@ const EnquiryForm = () => {
           <div className="mt-8 flex justify-between">
             {step > 1 ?
             <button
-              onClick={() => setStep(step - 1)}
+              onClick={() => goToStep(step - 1)}
               className="px-6 py-2.5 text-sm transition-colors bg-muted text-navy rounded-xl font-semibold border-0">
               
                 Back
