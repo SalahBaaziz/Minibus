@@ -167,10 +167,10 @@ const PricingTab = () => {
 
       {/* Formula explanation */}
       <Card className="bg-muted/20 border-border">
-        <CardContent className="p-5">
-          <p className="text-xs text-muted-foreground font-mono">
+        <CardContent className="p-3 sm:p-5">
+          <p className="text-[10px] sm:text-xs text-muted-foreground font-mono break-all">
             <strong className="text-foreground/60">Formula:</strong>{" "}
-            price = max( (passengers / max_capacity) × distance × base_rate × time_premium × journey_premium , distance × minimum_charge_per_mile )
+            price = max( (pax / capacity) × dist × rate × time × journey , dist × min_per_mile )
           </p>
         </CardContent>
       </Card>

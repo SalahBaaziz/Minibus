@@ -199,11 +199,11 @@ const AnalyticsTab = () => {
 
         {/* Status Breakdown */}
         <Card className="border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Status Breakdown</CardTitle>
+          <CardHeader className="pb-2 px-3 sm:px-6">
+            <CardTitle className="text-xs sm:text-sm font-semibold">Status Breakdown</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfig} className="h-[280px] w-full">
+          <CardContent className="px-1 sm:px-6">
+            <ChartContainer config={chartConfig} className="h-[220px] sm:h-[280px] w-full">
               <BarChart data={statusData} layout="vertical" barCategoryGap="20%">
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" horizontal={false} />
                 <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} axisLine={false} tickLine={false} />
