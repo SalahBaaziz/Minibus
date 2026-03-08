@@ -64,16 +64,18 @@ const PricingTab = () => {
   };
 
   const updateJsonField = (configKey: string, field: string, value: string) => {
+    const cleaned = value.replace(/^0+(?=\d)/, '');
     setEditValues((prev) => ({
       ...prev,
-      [configKey]: { ...prev[configKey], [field]: parseFloat(value) || 0 },
+      [configKey]: { ...prev[configKey], [field]: cleaned === '' ? 0 : parseFloat(cleaned) || 0 },
     }));
   };
 
   const updateSimpleValue = (configKey: string, value: string) => {
+    const cleaned = value.replace(/^0+(?=\d)/, '');
     setEditValues((prev) => ({
       ...prev,
-      [configKey]: parseFloat(value) || 0,
+      [configKey]: cleaned === '' ? 0 : parseFloat(cleaned) || 0,
     }));
   };
 
