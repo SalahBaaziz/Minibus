@@ -221,8 +221,42 @@ Deno.serve(async (req) => {
       throw new Error(`Email send failed: ${JSON.stringify(resendData)}`);
     }
 
+    // Store enquiry in database
+    const priceValue = priceEstimate?.finalPrice || null;
+    const { data: enquiryRow, error: dbError } = await supabase
+      .from("enquiries")
+      .insert({
+        full_name: fullName,
+        email,
+        phone,
+        journey_type: journeyType || null,
+        passengers: passengers || null,
+        pickup_address: pickupAddress || null,
+        dropoff_address: dropoffAddress || null,
+        date: date || null,
+        pickup_time: pickupTime || null,
+        return_journey: returnJourney || false,
+        return_time: returnTime || null,
+        distance_miles: distanceMiles || null,
+        duration_minutes: durationMinutes || null,
+        notes: notes || null,
+        estimated_price: priceValue,
+        status: "pending",
+      })
+      .select("id")
+      .single();
+
+    if (dbError) {
+      console.error("DB insert error:", dbError);
+    }
+
     return new Response(
-      JSON.stringify({ success: true, id: resendData.id }),
+      JSON.stringify({
+        success: true,
+        id: resendData.id,
+        enquiryId: enquiryRow?.id || null,
+        estimatedPrice: priceValue,
+      }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
