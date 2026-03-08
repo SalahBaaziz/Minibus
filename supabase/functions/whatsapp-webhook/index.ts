@@ -26,8 +26,8 @@ Deno.serve(async (req) => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     const formData = await req.formData();
-    const body = (formData.get("Body") as string || "").trim();
     const from = formData.get("From") as string || "";
+    const fromNumber = from.replace("whatsapp:", "").trim(); // Strip prefix for sendWhatsApp
 
     console.log(`Received WhatsApp from ${from}: ${body}`);
 
