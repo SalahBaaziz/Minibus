@@ -1,11 +1,12 @@
 const Hero = () => {
   return (
-    <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden pt-20">
+    <section role="banner" className="relative flex min-h-[90vh] items-center justify-center overflow-hidden pt-20">
       <img
         alt="Minibus driving through the Yorkshire countryside"
         className="absolute inset-0 w-full h-full object-cover"
         src="/images/hero-minibus.jpg"
         fetchPriority="high"
+        decoding="async"
         width={1920}
         height={1080} />
       

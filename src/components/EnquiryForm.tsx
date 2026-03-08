@@ -155,13 +155,13 @@ const EnquiryForm = () => {
   const labelClass = "block text-sm font-medium text-primary-foreground/80 mb-1.5";
 
   return (
-    <section id="enquiry" className="py-20 lg:py-28 bg-stone-300">
+    <section id="enquiry" aria-labelledby="enquiry-heading" className="py-20 lg:py-28 bg-stone-300">
       <div className="mx-auto max-w-2xl px-6">
         <div className="text-center mb-12">
           <p className="text-sm font-semibold uppercase tracking-widest text-gold">
             Get a Price - within the hour
           </p>
-          <h2 className="mt-3 font-serif text-3xl sm:text-4xl font-medium text-navy-dark">
+          <h2 id="enquiry-heading" className="mt-3 font-serif text-3xl sm:text-4xl font-medium text-navy-dark">
             Tell Us About Your Journey
           </h2>
           <p className="mt-3 text-navy-light">

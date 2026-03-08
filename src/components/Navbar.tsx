@@ -13,7 +13,7 @@ const Navbar = () => {
 
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-navy-dark/95 backdrop-blur-sm border-b border-navy-light/20">
+    <nav aria-label="Main navigation" className="fixed top-0 left-0 right-0 z-50 bg-navy-dark/95 backdrop-blur-sm border-b border-navy-light/20">
       <div className="mx-auto max-w-7xl px-6 flex items-center justify-between h-16">
         <a href="#" className="text-gold text-lg font-serif font-light text-left border-navy">
           Academy Minibus
@@ -48,9 +48,11 @@ const Navbar = () => {
         {/* Mobile menu button */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
           className="md:hidden text-primary-foreground">
           
-          {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {mobileOpen ? <X className="w-6 h-6" aria-hidden="true" /> : <Menu className="w-6 h-6" aria-hidden="true" />}
         </button>
       </div>
 
