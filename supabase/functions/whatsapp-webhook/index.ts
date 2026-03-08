@@ -158,7 +158,7 @@ Your ${enquiry.journey_type || "minibus"} trip on ${formatDate(enquiry.date)} is
 Please complete your payment using the link below:
 ${paymentUrl || "Payment link will be sent shortly."}
 
-Thank you for choosing Yorkshire Minibus!`);
+Thank you for choosing Academy Minibus!`);
 
       // Notify owner (use normalized business number)
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
