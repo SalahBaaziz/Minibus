@@ -109,12 +109,13 @@ Thank you for choosing *Yorkshire Minibus*!`);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
         BUSINESS_WHATSAPP_NUMBER,
-        `🎉 *BOOKING CONFIRMED*
+        `*BOOKING CONFIRMED*
 
 ${enquiry.full_name} has confirmed their booking at *£${enquiry.estimated_price}*!
 
-📅 ${formatDate(enquiry.date)} at ${enquiry.pickup_time || "TBC"}
-📍 ${enquiry.pickup_address || "TBC"} ➡️ ${enquiry.dropoff_address || "TBC"}`);
+📋 *Details*
+${formatDate(enquiry.date)} at ${enquiry.pickup_time || "TBC"}
+${enquiry.pickup_address || "TBC"} → ${enquiry.dropoff_address || "TBC"}`);
 
       return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
     }

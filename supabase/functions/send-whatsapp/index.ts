@@ -102,16 +102,17 @@ Reply *ACCEPT* to confirm at this price.
 Reply *PRICE <amount>* to set a different price (e.g. PRICE 150).`;
 
     // ── Thank-you message to Client ─────────────────────────────────────
-    const clientMessage = `👋 Hi ${fullName}!
+    const clientMessage = `Hi ${fullName}!
 
 Thanks for your enquiry with *Yorkshire Minibus*! Here's a summary:
 
-🎉 ${journeyType || "Minibus"} journey
-📅 ${formatDate(date)} at ${pickupTime || "TBC"}
-📍 ${pickupAddress || "TBC"} ➡️ ${dropoffAddress || "TBC"}
-👥 ${passengers || "N/A"} passengers
+📋 *Journey Details*
+${journeyType || "Minibus"} journey
+${formatDate(date)} at ${pickupTime || "TBC"}
+${pickupAddress || "TBC"} → ${dropoffAddress || "TBC"}
+${passengers || "N/A"} passengers
 
-✅ We've received your request and will get back to you shortly with a confirmed price. Sit tight!`;
+We've received your request and will get back to you shortly with a confirmed price.`;
 
     let clientPhone = phone.replace(/\s+/g, "");
     if (clientPhone.startsWith("0")) {
