@@ -1,0 +1,157 @@
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const TWILIO_ACCOUNT_SID = Deno.env.get("TWILIO_ACCOUNT_SID");
+    const TWILIO_AUTH_TOKEN = Deno.env.get("TWILIO_AUTH_TOKEN");
+    const TWILIO_WHATSAPP_NUMBER = Deno.env.get("TWILIO_WHATSAPP_NUMBER");
+    const BUSINESS_WHATSAPP_NUMBER = Deno.env.get("BUSINESS_WHATSAPP_NUMBER");
+
+    if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_WHATSAPP_NUMBER || !BUSINESS_WHATSAPP_NUMBER) {
+      throw new Error("Missing Twilio or business WhatsApp configuration");
+    }
+
+    const {
+      enquiryId,
+      fullName,
+      email,
+      phone,
+      journeyType,
+      passengers,
+      pickupAddress,
+      dropoffAddress,
+      date,
+      pickupTime,
+      returnJourney,
+      returnTime,
+      distanceMiles,
+      durationMinutes,
+      estimatedPrice,
+    } = await req.json();
+
+    // Format duration
+    const formatDuration = (mins: number) => {
+      if (!mins) return "N/A";
+      if (mins < 60) return `${mins} min`;
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      return m > 0 ? `${h}h ${m}min` : `${h}h`;
+    };
+
+    // Format date
+    const formatDate = (dateStr: string) => {
+      if (!dateStr) return "Not specified";
+      const [y, m, d] = dateStr.split("-");
+      const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      return `${parseInt(d)} ${months[parseInt(m) - 1]} ${y}`;
+    };
+
+    // Helper to send a WhatsApp message via Twilio
+    const sendWhatsApp = async (to: string, body: string) => {
+      const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`;
+      const fromNumber = TWILIO_WHATSAPP_NUMBER.startsWith("whatsapp:") 
+        ? TWILIO_WHATSAPP_NUMBER 
+        : `whatsapp:${TWILIO_WHATSAPP_NUMBER}`;
+      const toNumber = to.startsWith("whatsapp:") ? to : `whatsapp:${to}`;
+
+      const params = new URLSearchParams();
+      params.append("From", fromNumber);
+      params.append("To", toNumber);
+      params.append("Body", body);
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Basic ${btoa(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`)}`,
+        },
+        body: params.toString(),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        console.error("Twilio error:", data);
+        throw new Error(`Twilio send failed: ${JSON.stringify(data)}`);
+      }
+      return data;
+    };
+
+    // ── Message to Business Owner ───────────────────────────────────────
+    const ownerMessage = `🚐 *NEW MINIBUS ENQUIRY*
+
+👤 *${fullName}*
+📧 ${email}
+📞 ${phone}
+
+📋 *Journey Details*
+• Occasion: ${journeyType || "Not specified"}
+• Passengers: ${passengers || "N/A"}
+• Date: ${formatDate(date)}
+• Time: ${pickupTime || "Not specified"}
+• Return: ${returnJourney ? `Yes – ${returnTime || "TBC"}` : "No"}
+
+📍 *Route*
+• From: ${pickupAddress || "Not provided"}
+• To: ${dropoffAddress || "Not provided"}
+• Distance: ${distanceMiles ? `${distanceMiles} miles` : "N/A"}
+• Duration: ${formatDuration(durationMinutes)}
+
+💰 *Estimated Price: £${estimatedPrice || "N/A"}*
+
+━━━━━━━━━━━━━━━━━━
+Reply *ACCEPT ${enquiryId?.slice(0, 8)}* to confirm this booking at the quoted price.`;
+
+    // ── Thank-you message to Client ─────────────────────────────────────
+    const clientMessage = `Hi ${fullName}! 👋
+
+Thanks for your enquiry with *Yorkshire Minibus*! Here's a summary:
+
+🚐 ${journeyType || "Minibus"} journey
+📅 ${formatDate(date)} at ${pickupTime || "TBC"}
+📍 ${pickupAddress || "TBC"} → ${dropoffAddress || "TBC"}
+👥 ${passengers || "N/A"} passengers
+
+We've received your request and will get back to you shortly with a confirmed price. Sit tight! 🎉`;
+
+    // Format client phone for WhatsApp (assume UK if no country code)
+    let clientPhone = phone.replace(/\s+/g, "");
+    if (clientPhone.startsWith("0")) {
+      clientPhone = "+44" + clientPhone.slice(1);
+    } else if (!clientPhone.startsWith("+")) {
+      clientPhone = "+44" + clientPhone;
+    }
+
+    // Send both messages
+    const [ownerResult, clientResult] = await Promise.allSettled([
+      sendWhatsApp(BUSINESS_WHATSAPP_NUMBER, ownerMessage),
+      sendWhatsApp(clientPhone, clientMessage),
+    ]);
+
+    console.log("Owner WhatsApp:", ownerResult);
+    console.log("Client WhatsApp:", clientResult);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        ownerSent: ownerResult.status === "fulfilled",
+        clientSent: clientResult.status === "fulfilled",
+      }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  } catch (error: unknown) {
+    console.error("Error in send-whatsapp:", error);
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return new Response(
+      JSON.stringify({ success: false, error: message }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+});
