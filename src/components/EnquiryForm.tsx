@@ -32,6 +32,7 @@ const pickupTimeRanges = [
 const EnquiryForm = () => {
   const formRef = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(1);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   const goToStep = useCallback((newStep: number) => {
     setStep(newStep);
