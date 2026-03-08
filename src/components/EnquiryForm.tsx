@@ -260,7 +260,8 @@ const EnquiryForm = () => {
               <RouteMap
               pickup={pickupLocation}
               dropoff={dropoffLocation}
-              onRouteCalculated={setRouteInfo} />
+              onRouteCalculated={setRouteInfo}
+              onLoadingChange={setRouteLoading} />
             
             </div>
           }
