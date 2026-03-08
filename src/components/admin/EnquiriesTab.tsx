@@ -28,16 +28,16 @@ interface Enquiry {
 }
 
 const statusColors: Record<string, string> = {
-  pending: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-  offered: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-  confirmed: "bg-green-500/20 text-green-300 border-green-500/30",
-  rejected: "bg-red-500/20 text-red-300 border-red-500/30",
+  pending: "bg-yellow-500/20 text-yellow-600 dark:text-yellow-300 border-yellow-500/30",
+  offered: "bg-blue-500/20 text-blue-600 dark:text-blue-300 border-blue-500/30",
+  confirmed: "bg-green-500/20 text-green-600 dark:text-green-300 border-green-500/30",
+  rejected: "bg-red-500/20 text-red-600 dark:text-red-300 border-red-500/30",
 };
 
 const paymentColors: Record<string, string> = {
-  unpaid: "bg-red-500/20 text-red-300 border-red-500/30",
-  processing: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-  paid: "bg-green-500/20 text-green-300 border-green-500/30",
+  unpaid: "bg-red-500/20 text-red-600 dark:text-red-300 border-red-500/30",
+  processing: "bg-yellow-500/20 text-yellow-600 dark:text-yellow-300 border-yellow-500/30",
+  paid: "bg-green-500/20 text-green-600 dark:text-green-300 border-green-500/30",
 };
 
 const EnquiriesTab = () => {
@@ -76,7 +76,7 @@ const EnquiriesTab = () => {
   };
 
   if (loading) {
-    return <div className="text-primary-foreground/50 text-center py-12">Loading enquiries…</div>;
+    return <div className="text-muted-foreground text-center py-12">Loading enquiries…</div>;
   }
 
   return (
@@ -84,14 +84,14 @@ const EnquiriesTab = () => {
       {/* Stats row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: "Total", value: enquiries.length, color: "text-primary-foreground" },
-          { label: "Pending", value: enquiries.filter((e) => e.status === "pending").length, color: "text-yellow-300" },
-          { label: "Confirmed", value: enquiries.filter((e) => e.status === "confirmed").length, color: "text-green-300" },
+          { label: "Total", value: enquiries.length, color: "text-foreground" },
+          { label: "Pending", value: enquiries.filter((e) => e.status === "pending").length, color: "text-yellow-600 dark:text-yellow-300" },
+          { label: "Confirmed", value: enquiries.filter((e) => e.status === "confirmed").length, color: "text-green-600 dark:text-green-300" },
           { label: "Paid", value: enquiries.filter((e) => e.payment_status === "paid").length, color: "text-gold" },
         ].map((s) => (
-          <Card key={s.label} className="bg-navy-light/20 border-navy-light/30">
+          <Card key={s.label} className="bg-muted/50 border-border">
             <CardContent className="p-4">
-              <p className="text-xs text-primary-foreground/50">{s.label}</p>
+              <p className="text-xs text-muted-foreground">{s.label}</p>
               <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
             </CardContent>
           </Card>
@@ -100,30 +100,30 @@ const EnquiriesTab = () => {
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary-foreground/40" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search by name, email, phone, type…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-10 bg-navy-light/20 border-navy-light/30 text-primary-foreground placeholder:text-primary-foreground/30"
+          className="pl-10 bg-muted/50 border-border"
         />
       </div>
 
       {/* Enquiry cards */}
       <div className="space-y-3">
         {filtered.map((e) => (
-          <Card key={e.id} className="bg-navy-light/10 border-navy-light/20 hover:border-gold/30 transition-colors">
+          <Card key={e.id} className="bg-card border-border hover:border-primary/30 transition-colors">
             <CardContent className="p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-primary-foreground">{e.full_name}</h3>
+                    <h3 className="font-semibold text-foreground">{e.full_name}</h3>
                     <Badge variant="outline" className={statusColors[e.status] || ""}>{e.status}</Badge>
                     <Badge variant="outline" className={paymentColors[e.payment_status || "unpaid"] || ""}>
                       {e.payment_status || "unpaid"}
                     </Badge>
                   </div>
-                  <div className="flex flex-wrap gap-4 text-xs text-primary-foreground/50">
+                  <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1"><Mail className="h-3 w-3" />{e.email}</span>
                     <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{e.phone}</span>
                     <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{formatDate(e.created_at)}</span>
@@ -131,51 +131,51 @@ const EnquiriesTab = () => {
                 </div>
                 {e.estimated_price && (
                   <div className="text-right">
-                    <p className="text-xs text-primary-foreground/50">Est. Price</p>
+                    <p className="text-xs text-muted-foreground">Est. Price</p>
                     <p className="text-xl font-bold text-gold">£{e.estimated_price}</p>
                   </div>
                 )}
               </div>
 
-              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs text-primary-foreground/60">
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs text-muted-foreground">
                 {e.journey_type && (
-                  <div className="flex items-center gap-1.5 bg-navy-light/20 rounded px-2.5 py-1.5">
-                    <span className="text-primary-foreground/40">Type:</span> {e.journey_type}
+                  <div className="flex items-center gap-1.5 bg-muted/50 rounded px-2.5 py-1.5">
+                    <span className="text-muted-foreground/70">Type:</span> {e.journey_type}
                   </div>
                 )}
                 {e.passengers && (
-                  <div className="flex items-center gap-1.5 bg-navy-light/20 rounded px-2.5 py-1.5">
+                  <div className="flex items-center gap-1.5 bg-muted/50 rounded px-2.5 py-1.5">
                     <Users className="h-3 w-3" /> {e.passengers} passengers
                   </div>
                 )}
                 {e.date && (
-                  <div className="flex items-center gap-1.5 bg-navy-light/20 rounded px-2.5 py-1.5">
+                  <div className="flex items-center gap-1.5 bg-muted/50 rounded px-2.5 py-1.5">
                     <Calendar className="h-3 w-3" /> {e.date}
                   </div>
                 )}
                 {e.distance_miles && (
-                  <div className="flex items-center gap-1.5 bg-navy-light/20 rounded px-2.5 py-1.5">
+                  <div className="flex items-center gap-1.5 bg-muted/50 rounded px-2.5 py-1.5">
                     <MapPin className="h-3 w-3" /> {e.distance_miles} miles
                   </div>
                 )}
               </div>
 
               {(e.pickup_address || e.dropoff_address) && (
-                <div className="mt-2 text-xs text-primary-foreground/50 space-y-0.5">
-                  {e.pickup_address && <p><strong className="text-primary-foreground/60">From:</strong> {e.pickup_address}</p>}
-                  {e.dropoff_address && <p><strong className="text-primary-foreground/60">To:</strong> {e.dropoff_address}</p>}
+                <div className="mt-2 text-xs text-muted-foreground space-y-0.5">
+                  {e.pickup_address && <p><strong className="text-foreground/70">From:</strong> {e.pickup_address}</p>}
+                  {e.dropoff_address && <p><strong className="text-foreground/70">To:</strong> {e.dropoff_address}</p>}
                 </div>
               )}
 
               {e.notes && (
-                <p className="mt-2 text-xs text-primary-foreground/40 italic">"{e.notes}"</p>
+                <p className="mt-2 text-xs text-muted-foreground/70 italic">"{e.notes}"</p>
               )}
             </CardContent>
           </Card>
         ))}
 
         {filtered.length === 0 && (
-          <p className="text-center text-primary-foreground/40 py-12">No enquiries found.</p>
+          <p className="text-center text-muted-foreground py-12">No enquiries found.</p>
         )}
       </div>
     </div>

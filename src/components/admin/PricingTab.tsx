@@ -78,7 +78,7 @@ const PricingTab = () => {
   };
 
   if (loading) {
-    return <div className="text-primary-foreground/50 text-center py-12">Loading pricing config…</div>;
+    return <div className="text-muted-foreground text-center py-12">Loading pricing config…</div>;
   }
 
   const jsonConfigs = configs.filter((c) => typeof c.config_value === "object");
@@ -88,10 +88,10 @@ const PricingTab = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-serif font-bold text-primary-foreground">Pricing Configuration</h2>
-          <p className="text-xs text-primary-foreground/50">Adjust the premiums and rates used in price calculations.</p>
+          <h2 className="text-lg font-serif font-bold text-foreground">Pricing Configuration</h2>
+          <p className="text-xs text-muted-foreground">Adjust the premiums and rates used in price calculations.</p>
         </div>
-        <Button variant="ghost" size="sm" onClick={fetchConfigs} className="text-primary-foreground/50 hover:text-gold">
+        <Button variant="ghost" size="sm" onClick={fetchConfigs} className="text-muted-foreground hover:text-gold">
           <RefreshCw className="h-4 w-4 mr-1" /> Refresh
         </Button>
       </div>
@@ -102,10 +102,10 @@ const PricingTab = () => {
       {/* Simple values */}
       <div className="grid sm:grid-cols-2 gap-4">
         {simpleConfigs.map((cfg) => (
-          <Card key={cfg.config_key} className="bg-navy-light/10 border-navy-light/20">
+          <Card key={cfg.config_key} className="bg-muted/30 border-border">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-primary-foreground">{cfg.label || cfg.config_key}</CardTitle>
-              {cfg.description && <CardDescription className="text-xs text-primary-foreground/40">{cfg.description}</CardDescription>}
+              <CardTitle className="text-sm text-foreground">{cfg.label || cfg.config_key}</CardTitle>
+              {cfg.description && <CardDescription className="text-xs">{cfg.description}</CardDescription>}
             </CardHeader>
             <CardContent className="space-y-3">
               <Input
@@ -113,7 +113,7 @@ const PricingTab = () => {
                 step="0.01"
                 value={editValues[cfg.config_key] ?? ""}
                 onChange={(e) => updateSimpleValue(cfg.config_key, e.target.value)}
-                className="bg-navy-light/20 border-navy-light/30 text-primary-foreground"
+                className="bg-muted/50 border-border"
               />
               <Button
                 size="sm"
@@ -131,22 +131,22 @@ const PricingTab = () => {
 
       {/* JSON values (premiums) */}
       {jsonConfigs.map((cfg) => (
-        <Card key={cfg.config_key} className="bg-navy-light/10 border-navy-light/20">
+        <Card key={cfg.config_key} className="bg-muted/30 border-border">
           <CardHeader>
-            <CardTitle className="text-sm text-primary-foreground">{cfg.label || cfg.config_key}</CardTitle>
-            {cfg.description && <CardDescription className="text-xs text-primary-foreground/40">{cfg.description}</CardDescription>}
+            <CardTitle className="text-sm text-foreground">{cfg.label || cfg.config_key}</CardTitle>
+            {cfg.description && <CardDescription className="text-xs">{cfg.description}</CardDescription>}
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {Object.entries(editValues[cfg.config_key] || {}).map(([field, val]) => (
                 <div key={field}>
-                  <Label className="text-xs text-primary-foreground/60">{field}</Label>
+                  <Label className="text-xs text-muted-foreground">{field}</Label>
                   <Input
                     type="number"
                     step="0.01"
                     value={val as number}
                     onChange={(e) => updateJsonField(cfg.config_key, field, e.target.value)}
-                    className="bg-navy-light/20 border-navy-light/30 text-primary-foreground mt-1"
+                    className="bg-muted/50 border-border mt-1"
                   />
                 </div>
               ))}
@@ -166,7 +166,7 @@ const PricingTab = () => {
 
 
       {/* Formula explanation */}
-      <Card className="bg-navy-light/5 border-navy-light/15">
+      <Card className="bg-muted/20 border-border">
         <CardContent className="p-5">
           <p className="text-xs text-muted-foreground font-mono">
             <strong className="text-foreground/60">Formula:</strong>{" "}
