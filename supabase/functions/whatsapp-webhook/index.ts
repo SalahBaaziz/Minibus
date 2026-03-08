@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
       const enquiry = await findEnquiryByClientPhone(supabase, from, "offered");
 
       if (!enquiry) {
-        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
           `No active quote found. It may have already been confirmed or expired.`);
         return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
       }
