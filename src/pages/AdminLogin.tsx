@@ -10,16 +10,18 @@ import { useToast } from "@/hooks/use-toast";
 const AdminLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isSetup, setIsSetup] = useState(false);
   const [setupKey, setSetupKey] = useState("");
 
+  const toInternalEmail = (user: string) =>
+    `${user.toLowerCase().trim()}@admin.academyminibus.local`;
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        // Check if admin
         supabase.rpc("has_role", { _user_id: session.user.id, _role: "admin" }).then(({ data }) => {
           if (data) navigate("/admin");
         });
@@ -31,7 +33,10 @@ const AdminLogin = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({
+        email: toInternalEmail(username),
+        password,
+      });
       if (error) throw error;
 
       const { data: { session } } = await supabase.auth.getSession();
@@ -60,7 +65,7 @@ const AdminLogin = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("create-admin", {
-        body: { email, password, setupKey },
+        body: { username, password, setupKey },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
@@ -87,14 +92,15 @@ const AdminLogin = () => {
 
         <form onSubmit={isSetup ? handleSetup : handleLogin} className="space-y-4">
           <div>
-            <Label className="text-primary-foreground/70">Email</Label>
+            <Label className="text-primary-foreground/70">Username</Label>
             <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
               className="bg-navy-light/30 border-navy-light/40 text-primary-foreground placeholder:text-primary-foreground/30"
-              placeholder="admin@email.com"
+              placeholder="admin"
+              autoComplete="username"
             />
           </div>
           <div>
@@ -106,6 +112,7 @@ const AdminLogin = () => {
               required
               className="bg-navy-light/30 border-navy-light/40 text-primary-foreground placeholder:text-primary-foreground/30"
               placeholder="••••••••"
+              autoComplete="current-password"
             />
           </div>
 

@@ -16,9 +16,8 @@ Deno.serve(async (req) => {
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    const { email, password, setupKey } = await req.json();
+    const { username, password, setupKey } = await req.json();
 
-    // Simple setup key to prevent unauthorized admin creation
     if (setupKey !== "yorkshire-minibus-admin-2024") {
       return new Response(
         JSON.stringify({ error: "Invalid setup key" }),
@@ -26,23 +25,28 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Check if any admin already exists
+    // Delete any existing admins (auth users + roles) for fresh setup
     const { data: existingAdmins } = await supabase
       .from("user_roles")
-      .select("id")
-      .eq("role", "admin")
-      .limit(1);
+      .select("user_id")
+      .eq("role", "admin");
 
     if (existingAdmins && existingAdmins.length > 0) {
-      return new Response(
-        JSON.stringify({ error: "Admin already exists" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      for (const admin of existingAdmins) {
+        await supabase.auth.admin.deleteUser(admin.user_id);
+      }
+      await supabase
+        .from("user_roles")
+        .delete()
+        .eq("role", "admin");
     }
+
+    // Convert username to internal email
+    const internalEmail = `${username.toLowerCase().trim()}@admin.academyminibus.local`;
 
     // Create user
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email,
+      email: internalEmail,
       password,
       email_confirm: true,
     });
