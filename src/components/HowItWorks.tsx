@@ -36,7 +36,7 @@ const HowItWorks = () => {
         <div className="mt-16 grid gap-8 sm:grid-cols-3">
           {steps.map((step) =>
           <div key={step.number} className="text-center">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-bold text-gold bg-secondary">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-bold text-gold bg-navy-dark">
                 {step.number}
               </div>
               <h3 className="font-serif text-xl font-bold text-navy-dark">
