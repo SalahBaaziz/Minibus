@@ -26,8 +26,8 @@ Deno.serve(async (req) => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     const formData = await req.formData();
-    const body = (formData.get("Body") as string || "").trim();
     const from = formData.get("From") as string || "";
+    const fromNumber = from.replace("whatsapp:", "").trim(); // Strip prefix for sendWhatsApp
 
     console.log(`Received WhatsApp from ${from}: ${body}`);
 
@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
       const enquiry = await findLatestEnquiry(supabase, "pending");
 
       if (!enquiry) {
-        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
           `No pending enquiries found.`);
         return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
       }
@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
         clientPhone, buildClientOffer(enquiry, enquiry.estimated_price));
 
-      await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+      await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
         `Quote of £${enquiry.estimated_price} sent to ${enquiry.full_name} for confirmation.`);
 
       return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
       const enquiry = await findLatestEnquiry(supabase, "pending");
 
       if (!enquiry) {
-        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
           `No pending enquiries found.`);
         return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
       }
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
         clientPhone, `Hi ${enquiry.full_name}, unfortunately we're unable to accommodate your booking request at this time. Thank you for considering Yorkshire Minibus.`);
 
-      await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+      await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
         `Enquiry from ${enquiry.full_name} has been declined.`);
 
       return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
@@ -89,7 +89,7 @@ Deno.serve(async (req) => {
       const enquiry = await findLatestEnquiry(supabase, "pending");
 
       if (!enquiry) {
-        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
           `No pending enquiries found.`);
         return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
       }
@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
         clientPhone, buildClientOffer(enquiry, newPrice));
 
-      await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+      await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
         `Custom quote of £${newPrice} sent to ${enquiry.full_name} for confirmation.`);
 
       return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
       const enquiry = await findEnquiryByClientPhone(supabase, from, "offered");
 
       if (!enquiry) {
-        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
           `No active quote found. It may have already been confirmed or expired.`);
         return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
       }
@@ -138,7 +138,7 @@ Deno.serve(async (req) => {
       }
 
       // Send payment link to client
-      await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+      await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
         `*Booking Confirmed!*
 
 Your ${enquiry.journey_type || "minibus"} trip on ${formatDate(enquiry.date)} is locked in at £${enquiry.estimated_price}.
@@ -184,14 +184,14 @@ ${enquiry.email}`);
       const enquiry = await findEnquiryByClientPhone(supabase, from, "offered");
 
       if (!enquiry) {
-        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
           `No active quote found.`);
         return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
       }
 
       await supabase.from("enquiries").update({ status: "rejected" }).eq("id", enquiry.id);
 
-      await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+      await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
         `We're sorry to hear that. If you'd like to discuss the price, feel free to give us a call. Thanks for considering Yorkshire Minibus!`);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
