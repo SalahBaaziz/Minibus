@@ -471,7 +471,7 @@ const EnquiryForm = () => {
               <div>
                 <label className="text-primary-foreground">Full Name</label>
                 <input
-                className={inputClass}
+                className={cn(inputClass, validationErrors.includes("fullName") && errorBorderClass)}
                 placeholder="e.g. John Smith"
                 value={formData.fullName}
                 onChange={(e) => update("fullName", e.target.value)} />
