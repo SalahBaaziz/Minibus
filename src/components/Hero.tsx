@@ -9,7 +9,7 @@ const Hero = () => {
       <div className="absolute inset-0 bg-navy/70" />
       <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
         <p className="mb-4 uppercase tracking-widest text-gold-light text-lg font-bold">
-          Yorkshire's Trusted Minibus Service
+          Your Trusted Minibus Service
         </p>
         <h1 className="font-serif text-4xl leading-tight text-primary-foreground sm:text-5xl text-balance lg:text-4xl font-light">Comfortable, Reliable Minibus Hire 
 Across Yorkshire
