@@ -289,7 +289,7 @@ const EnquiryForm = () => {
               label="Pick-up location"
               placeholder="e.g. Leeds City Centre"
               value={pickupLocation}
-              onChange={(loc) => { setPickupLocation(loc); setValidationErrors((prev) => prev.filter((f) => f !== "pickup")); }}
+              onChange={(loc) => {setPickupLocation(loc);setValidationErrors((prev) => prev.filter((f) => f !== "pickup"));}}
               hasError={validationErrors.includes("pickup")} />
             
 
@@ -297,7 +297,7 @@ const EnquiryForm = () => {
               label="Drop-off location"
               placeholder="e.g. Harrogate town centre"
               value={dropoffLocation}
-              onChange={(loc) => { setDropoffLocation(loc); setValidationErrors((prev) => prev.filter((f) => f !== "dropoff")); }}
+              onChange={(loc) => {setDropoffLocation(loc);setValidationErrors((prev) => prev.filter((f) => f !== "dropoff"));}}
               hasError={validationErrors.includes("dropoff")} />
             
 
@@ -458,7 +458,7 @@ const EnquiryForm = () => {
                     </p>
               }
                   {routeInfo &&
-              <p className="text-sm text-gold font-semibold">
+              <p className="text-sm font-semibold text-navy-dark">
                       {routeInfo.distanceMiles} miles •{" "}
                       {routeInfo.durationMinutes < 60 ?
                 `${routeInfo.durationMinutes} min` :
@@ -507,17 +507,17 @@ const EnquiryForm = () => {
           }
 
           {/* Validation message */}
-          {validationErrors.length > 0 && (
-            <p className="mt-4 text-sm text-primary-foreground font-semibold bg-destructive/15 border border-destructive/30 rounded-lg px-3 py-2">
+          {validationErrors.length > 0 &&
+          <p className="mt-4 text-sm text-primary-foreground font-semibold bg-destructive/15 border border-destructive/30 rounded-lg px-3 py-2">
               ⚠ Please fill in the highlighted fields before continuing.
             </p>
-          )}
+          }
 
           {/* NAVIGATION */}
           <div className="mt-4 flex justify-between">
             {step > 1 ?
             <button
-              onClick={() => { setValidationErrors([]); goToStep(step - 1); }}
+              onClick={() => {setValidationErrors([]);goToStep(step - 1);}}
               className="px-6 py-2.5 text-sm transition-colors bg-muted text-navy rounded-xl font-semibold border-0">
               
                 Back
@@ -543,7 +543,7 @@ const EnquiryForm = () => {
             <button
               onClick={() => {
                 const missing = validateStep(5);
-                if (missing.length > 0) { setValidationErrors(missing); return; }
+                if (missing.length > 0) {setValidationErrors(missing);return;}
                 handleSubmit();
               }}
               disabled={submitting}
