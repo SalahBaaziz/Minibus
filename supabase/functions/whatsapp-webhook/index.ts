@@ -203,7 +203,7 @@ ${enquiry.email}`);
       await supabase.from("enquiries").update({ status: "rejected" }).eq("id", enquiry.id);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
-        `We're sorry to hear that. If you'd like to discuss the price, feel free to give us a call. Thanks for considering Yorkshire Minibus!`);
+        `We're sorry to hear that. If you'd like to discuss the price, feel free to give us a call. Thanks for considering Academy Minibus!`);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
         normBusiness,
