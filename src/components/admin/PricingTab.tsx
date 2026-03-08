@@ -164,8 +164,6 @@ const PricingTab = () => {
         </Card>
       ))}
 
-      {/* Live Calculator */}
-      <PriceCalculator editValues={editValues} />
 
       {/* Formula explanation */}
       <Card className="bg-navy-light/5 border-navy-light/15">
