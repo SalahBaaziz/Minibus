@@ -264,10 +264,14 @@ function buildClientOffer(enquiry: any, price: number | null): string {
 Great news — Yorkshire Minibus has come back with a quote for your trip:
 
 📋 *Journey Details*
-${enquiry.journey_type || "Minibus"} journey
-${formatDate(enquiry.date)} at ${enquiry.pickup_time || "TBC"}
-${enquiry.pickup_address || "TBC"} → ${enquiry.dropoff_address || "TBC"}
-${enquiry.passengers || "N/A"} passengers
+Occasion: ${enquiry.journey_type || "Minibus"}
+Passengers: ${enquiry.passengers || "N/A"}
+Date: ${formatDate(enquiry.date)}
+Time: ${enquiry.pickup_time || "TBC"}
+
+📍 *Route*
+From: ${enquiry.pickup_address || "TBC"}
+To: ${enquiry.dropoff_address || "TBC"}
 
 💰 *Price*
 £${price || "TBC"}

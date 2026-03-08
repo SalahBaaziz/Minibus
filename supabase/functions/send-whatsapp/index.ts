@@ -104,13 +104,18 @@ Would you like to accept this enquiry? Reply YES or NO.
     // ── Thank-you message to Client ─────────────────────────────────────
     const clientMessage = `Hi ${fullName}!
 
-Thanks for your enquiry with *Yorkshire Minibus*! Here's a summary:
+Thanks for your enquiry with Yorkshire Minibus! Here's a summary:
 
 📋 *Journey Details*
-${journeyType || "Minibus"} journey
-${formatDate(date)} at ${pickupTime || "TBC"}
-${pickupAddress || "TBC"} → ${dropoffAddress || "TBC"}
-${passengers || "N/A"} passengers
+Occasion: ${journeyType || "Minibus"}
+Passengers: ${passengers || "N/A"}
+Date: ${formatDate(date)}
+Time: ${pickupTime || "TBC"}
+Return: ${returnJourney ? `Yes – ${returnTime || "TBC"}` : "No"}
+
+📍 *Route*
+From: ${pickupAddress || "TBC"}
+To: ${dropoffAddress || "TBC"}
 
 We've received your request and will get back to you shortly with a confirmed price.`;
 
