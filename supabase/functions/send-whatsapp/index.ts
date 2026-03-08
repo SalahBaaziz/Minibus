@@ -125,14 +125,14 @@ We've received your request and will get back to you shortly with a confirmed pr
       clientPhone = "+44" + clientPhone;
     }
 
-    // Send both messages
+    // Send both WhatsApp messages
     const [ownerResult, clientResult] = await Promise.allSettled([
-      sendSMS(BUSINESS_WHATSAPP_NUMBER, ownerMessage),
-      sendSMS(clientPhone, clientMessage),
+      sendWhatsApp(BUSINESS_WHATSAPP_NUMBER, ownerMessage),
+      sendWhatsApp(clientPhone, clientMessage),
     ]);
 
-    console.log("Owner SMS:", ownerResult);
-    console.log("Client SMS:", clientResult);
+    console.log("Owner WhatsApp:", ownerResult);
+    console.log("Client WhatsApp:", clientResult);
 
     return new Response(
       JSON.stringify({
