@@ -187,7 +187,7 @@ const EnquiryForm = () => {
                 value={formData.passengers}
                 onChange={(e) => update("passengers", e.target.value)}>
                 
-                  <option value="">Select a range</option>
+                  <option value="">Select a value</option>
                   {passengerRanges.map((r) =>
                 <option key={r} value={r}>{r}</option>
                 )}
