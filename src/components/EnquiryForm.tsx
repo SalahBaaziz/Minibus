@@ -219,8 +219,9 @@ const EnquiryForm = () => {
               </div>
 
               <div>
-                <label className={labelClass}>How many passengers?</label>
+                <label htmlFor="passengers" className={labelClass}>How many passengers?</label>
                 <select
+                id="passengers"
                 className={inputClass}
                 value={formData.passengers}
                 onChange={(e) => update("passengers", e.target.value)}>
