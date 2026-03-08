@@ -8,7 +8,8 @@ const Hero = () => {
         fetchPriority="high"
         decoding="async"
         width={1920}
-        height={1080} />
+        height={1080}
+        sizes="100vw" />
       
       <div className="absolute inset-0 bg-navy/70" />
       <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">

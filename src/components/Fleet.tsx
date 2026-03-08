@@ -75,8 +75,10 @@ const Fleet = () => {
                 src={v.image}
                 alt={v.title}
                 loading="lazy"
+                decoding="async"
                 width={400}
                 height={300}
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="h-full w-full object-cover" />
               
                 <div className="absolute top-4 right-4 rounded-full bg-navy/80 px-3 py-1 text-xs font-semibold text-primary-foreground">

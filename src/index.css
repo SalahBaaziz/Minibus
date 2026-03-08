@@ -4,6 +4,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font metric overrides to reduce CLS when web fonts load */
+@font-face {
+  font-family: "DM Sans Fallback";
+  src: local("Arial");
+  size-adjust: 96%;
+  ascent-override: 94%;
+  descent-override: 26%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Playfair Fallback";
+  src: local("Georgia");
+  size-adjust: 112%;
+  ascent-override: 88%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
 @layer base {
 
 :root {
@@ -50,10 +69,10 @@
 --gold-light: 168 36% 40%;
 --gold-dark: 168 34% 22%;
 
-/* TYPOGRAPHY */
+/* TYPOGRAPHY – size-adjust fallbacks reduce CLS from web font swap */
 
---font-body: "DM Sans", sans-serif;
---font-heading: "Playfair Display", serif;
+--font-body: "DM Sans", "DM Sans Fallback", sans-serif;
+--font-heading: "Playfair Display", "Playfair Fallback", serif;
 
 /* FONT SIZES (match screenshot) */
 
