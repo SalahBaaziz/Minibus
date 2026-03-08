@@ -279,7 +279,7 @@ const EnquiryForm = () => {
               <h3 className="font-serif text-lg font-bold text-primary-foreground">
                 When Do You Need Us?
               </h3>
-              <p className="text-sm text-primary-foreground/60 mt-1">
+              <p className="text-sm text-primary-foreground/80 mt-1">
                 A rough estimate is fine if you're not sure yet.
               </p>
             </div>
