@@ -310,8 +310,9 @@ const EnquiryForm = () => {
             </div>
           
             <div>
-              <label className={labelClass}>Pick-up time</label>
+              <label htmlFor="pickupTime" className={labelClass}>Pick-up time</label>
               <select
+                id="pickupTime"
                 className={inputClass}
                 value={formData.pickupTime}
                 onChange={(e) => update("pickupTime", e.target.value)}>
