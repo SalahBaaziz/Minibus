@@ -85,10 +85,10 @@ const AnalyticsTab = () => {
   };
 
   const kpis = [
-    { label: "Total Enquiries", value: enquiries.length.toString(), icon: Users, change: "+12% this week", color: "bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400" },
-    { label: "Conversion Rate", value: `${conversionRate}%`, icon: Target, change: "of all enquiries", color: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400" },
-    { label: "Revenue (Paid)", value: `£${totalRevenue.toFixed(0)}`, icon: PoundSterling, change: "total collected", color: "bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400" },
-    { label: "Avg. Quote", value: `£${avgPrice}`, icon: TrendingUp, change: "per enquiry", color: "bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400" },
+    { label: "Total Enquiries", value: enquiries.length.toString(), icon: Users, sub: "all time" },
+    { label: "Conversion Rate", value: `${conversionRate}%`, icon: Target, sub: "confirmed / total" },
+    { label: "Revenue", value: `£${totalRevenue.toFixed(0)}`, icon: PoundSterling, sub: "paid bookings" },
+    { label: "Avg. Quote", value: `£${avgPrice}`, icon: TrendingUp, sub: "per enquiry" },
   ];
 
   return (
@@ -96,16 +96,14 @@ const AnalyticsTab = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map((kpi) => (
-          <Card key={kpi.label} className="bg-white dark:bg-card border shadow-sm hover:shadow-md transition-shadow">
+          <Card key={kpi.label} className="border-border">
             <CardContent className="p-5">
-              <div className="flex items-start justify-between">
-                <div className="space-y-1">
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{kpi.label}</p>
-                  <p className="text-3xl font-bold tracking-tight text-foreground">{kpi.value}</p>
-                  <p className="text-xs text-muted-foreground">{kpi.change}</p>
-                </div>
-                <div className={`p-2.5 rounded-xl ${kpi.color}`}>
-                  <kpi.icon className="h-5 w-5" />
+              <div className="flex items-center gap-3">
+                <kpi.icon className="h-5 w-5 text-primary shrink-0" />
+                <div>
+                  <p className="text-xs text-muted-foreground">{kpi.label}</p>
+                  <p className="text-2xl font-bold text-foreground">{kpi.value}</p>
+                  <p className="text-[11px] text-muted-foreground">{kpi.sub}</p>
                 </div>
               </div>
             </CardContent>
@@ -113,24 +111,23 @@ const AnalyticsTab = () => {
         ))}
       </div>
 
-      {/* Enquiries Over Time - Area Chart */}
-      <Card className="bg-white dark:bg-card border shadow-sm">
+      {/* Enquiries Over Time */}
+      <Card className="border-border">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold text-foreground">Enquiries Over Time</CardTitle>
-          <p className="text-xs text-muted-foreground">Daily enquiry volume</p>
+          <CardTitle className="text-sm font-semibold">Enquiries Over Time</CardTitle>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[280px] w-full">
             <AreaChart data={enquiriesOverTime}>
               <defs>
                 <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(168, 32%, 45%)" stopOpacity={0.3} />
+                  <stop offset="5%" stopColor="hsl(168, 32%, 45%)" stopOpacity={0.25} />
                   <stop offset="95%" stopColor="hsl(168, 32%, 45%)" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(210, 12%, 90%)" vertical={false} />
-              <XAxis dataKey="date" tick={{ fill: "hsl(210, 10%, 50%)", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "hsl(210, 10%, 50%)", fontSize: 11 }} allowDecimals={false} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" className="stroke-border" vertical={false} />
+              <XAxis dataKey="date" tick={{ fontSize: 11 }} className="text-muted-foreground" axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11 }} className="text-muted-foreground" allowDecimals={false} axisLine={false} tickLine={false} />
               <ChartTooltip content={<ChartTooltipContent />} />
               <Area type="monotone" dataKey="count" stroke="hsl(168, 32%, 45%)" strokeWidth={2} fill="url(#colorCount)" />
             </AreaChart>
@@ -139,14 +136,13 @@ const AnalyticsTab = () => {
       </Card>
 
       <div className="grid md:grid-cols-2 gap-4">
-        {/* Journey Type - Pie */}
-        <Card className="bg-white dark:bg-card border shadow-sm">
+        {/* Journey Type Pie */}
+        <Card className="border-border">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-semibold text-foreground">Journey Types</CardTitle>
-            <p className="text-xs text-muted-foreground">Breakdown by category</p>
+            <CardTitle className="text-sm font-semibold">Journey Types</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[260px] w-full flex items-center justify-center">
+            <div className="h-[260px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -155,11 +151,10 @@ const AnalyticsTab = () => {
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    innerRadius={55}
-                    outerRadius={90}
+                    innerRadius={50}
+                    outerRadius={85}
                     paddingAngle={3}
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    labelLine={{ stroke: "hsl(210, 10%, 70%)" }}
                   >
                     {journeyTypeData.map((_, i) => (
                       <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
@@ -172,18 +167,17 @@ const AnalyticsTab = () => {
           </CardContent>
         </Card>
 
-        {/* Status Breakdown - Horizontal Bar */}
-        <Card className="bg-white dark:bg-card border shadow-sm">
+        {/* Status Breakdown */}
+        <Card className="border-border">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-semibold text-foreground">Status Breakdown</CardTitle>
-            <p className="text-xs text-muted-foreground">Current enquiry statuses</p>
+            <CardTitle className="text-sm font-semibold">Status Breakdown</CardTitle>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-[260px] w-full">
               <BarChart data={statusData} layout="vertical" barCategoryGap="20%">
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(210, 12%, 90%)" horizontal={false} />
-                <XAxis type="number" tick={{ fill: "hsl(210, 10%, 50%)", fontSize: 11 }} allowDecimals={false} axisLine={false} tickLine={false} />
-                <YAxis dataKey="name" type="category" tick={{ fill: "hsl(210, 10%, 50%)", fontSize: 11 }} width={80} axisLine={false} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" className="stroke-border" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} axisLine={false} tickLine={false} />
+                <YAxis dataKey="name" type="category" tick={{ fontSize: 11 }} width={80} axisLine={false} tickLine={false} />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Bar dataKey="value" fill="hsl(168, 32%, 45%)" radius={[0, 6, 6, 0]} />
               </BarChart>
