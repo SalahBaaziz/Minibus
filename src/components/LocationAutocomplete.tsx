@@ -18,7 +18,7 @@ interface LocationAutocompleteProps {
 
 const PHOTON_URL = "https://photon.komoot.io/api";
 
-const LocationAutocomplete = ({ label, placeholder, value, onChange }: LocationAutocompleteProps) => {
+const LocationAutocomplete = ({ label, placeholder, value, onChange, hasError }: LocationAutocompleteProps) => {
   const [query, setQuery] = useState(value?.displayName || "");
   const [suggestions, setSuggestions] = useState<LocationResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
