@@ -8,7 +8,7 @@ const reviews = [
   time: "2 weeks ago"
 },
 {
-  text: "Used Yorkshire Minibus Hire for our company Christmas do. Driver was bang on time, really friendly, and got us all home safe. Already rebooked for next year's summer party!",
+  text: "Used Academy Minibus for our company Christmas do. Driver was bang on time, really friendly, and got us all home safe. Already rebooked for next year's summer party!",
   name: "James M.",
   location: "Leeds",
   time: "1 month ago"

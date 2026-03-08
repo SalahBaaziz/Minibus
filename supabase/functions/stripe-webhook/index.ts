@@ -88,7 +88,7 @@ To: ${enquiry.dropoff_address || "TBC"}
 
 We look forward to seeing you! If you have any questions, feel free to reply to this message.
 
-Yorkshire Minibus`
+Academy Minibus`
           );
 
           // Send notification to owner

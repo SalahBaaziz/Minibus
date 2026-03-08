@@ -104,7 +104,7 @@ Would you like to accept this enquiry? Reply YES or NO.
     // ── Thank-you message to Client ─────────────────────────────────────
     const clientMessage = `Hi ${fullName}!
 
-Thanks for your enquiry with Yorkshire Minibus! Here's a summary:
+Thanks for your enquiry with Academy Minibus! Here's a summary:
 
 📋 *Journey Details*
 Occasion: ${journeyType || "Minibus"}

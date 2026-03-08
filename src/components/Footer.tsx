@@ -8,7 +8,7 @@ const Footer = () => {
           <div>
             <h3 className="font-serif text-lg font-bold text-gold">Academy Minibus</h3>
             <p className="mt-3 text-sm leading-relaxed text-primary-foreground/60">
-              Yorkshire's trusted minibus hire service. Comfortable, reliable group travel for every occasion.
+              Your trusted minibus hire service. Comfortable, reliable group travel for every occasion.
             </p>
           </div>
           <div>

@@ -11,8 +11,7 @@ const Hero = () => {
         <p className="mb-4 uppercase tracking-widest text-gold-light text-lg font-bold">
           Your Trusted Minibus Service
         </p>
-        <h1 className="font-serif text-4xl leading-tight text-primary-foreground sm:text-5xl text-balance lg:text-4xl font-light">Comfortable, Reliable Minibus Hire 
-Across Yorkshire
+        <h1 className="font-serif text-4xl leading-tight text-primary-foreground sm:text-5xl text-balance lg:text-4xl font-light">Comfortable, Reliable Minibus Hire
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-primary-foreground/80">
           From weddings and airport transfers to school trips and nights out — we make group travel easy, safe and affordable.

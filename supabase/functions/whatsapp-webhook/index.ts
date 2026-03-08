@@ -307,7 +307,7 @@ function formatDate(dateStr: string | null): string {
 function buildClientOffer(enquiry: any, price: number | null): string {
   return `Hi ${enquiry.full_name}! 👋
 
-Great news — Yorkshire Minibus has come back with a quote for your trip:
+Great news — Academy Minibus has come back with a quote for your trip:
 
 📋 *Journey Details*
 Occasion: ${enquiry.journey_type || "Minibus"}
