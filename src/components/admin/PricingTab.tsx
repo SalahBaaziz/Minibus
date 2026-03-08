@@ -246,7 +246,7 @@ function PriceCalculator({ editValues }: { editValues: Record<string, any> }) {
         </div>
       </CardHeader>
       <CardContent className="space-y-5">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <div className="space-y-1.5">
             <Label className="text-xs text-muted-foreground">Distance (miles)</Label>
             <Input
