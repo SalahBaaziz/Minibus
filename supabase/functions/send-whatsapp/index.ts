@@ -107,7 +107,8 @@ Deno.serve(async (req) => {
 💰 *Estimated Price: £${estimatedPrice || "N/A"}*
 
 ━━━━━━━━━━━━━━━━━━
-Reply *ACCEPT ${enquiryId?.slice(0, 8)}* to confirm this booking at the quoted price.`;
+Reply *ACCEPT ${enquiryId?.slice(0, 8)}* to confirm at this price.
+Reply *PRICE ${enquiryId?.slice(0, 8)} <amount>* to set a different price (e.g. PRICE ${enquiryId?.slice(0, 8)} 150).`;
 
     // ── Thank-you message to Client ─────────────────────────────────────
     const clientMessage = `Hi ${fullName}! 👋
