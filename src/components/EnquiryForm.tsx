@@ -185,6 +185,8 @@ const EnquiryForm = () => {
 
   }
 
+  const errorBorderClass = "!border-destructive !ring-destructive/50";
+
   const inputClass =
   "w-full rounded-lg border border-navy-light/30 bg-navy-light/20 px-4 py-3 text-sm text-primary-foreground placeholder:text-primary-foreground/40 focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold/50";
 
