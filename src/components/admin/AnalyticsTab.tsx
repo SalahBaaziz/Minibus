@@ -156,14 +156,14 @@ const AnalyticsTab = () => {
         </CardContent>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
         {/* Journey Type Pie */}
         <Card className="border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Journey Types</CardTitle>
+          <CardHeader className="pb-2 px-3 sm:px-6">
+            <CardTitle className="text-xs sm:text-sm font-semibold">Journey Types</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="h-[280px] w-full">
+          <CardContent className="px-1 sm:px-6">
+            <div className="h-[220px] sm:h-[280px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
