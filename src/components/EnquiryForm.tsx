@@ -289,14 +289,16 @@ const EnquiryForm = () => {
               label="Pick-up location"
               placeholder="e.g. Leeds City Centre"
               value={pickupLocation}
-              onChange={setPickupLocation} />
+              onChange={(loc) => { setPickupLocation(loc); setValidationErrors((prev) => prev.filter((f) => f !== "pickup")); }}
+              hasError={validationErrors.includes("pickup")} />
             
 
               <LocationAutocomplete
               label="Drop-off location"
               placeholder="e.g. Harrogate town centre"
               value={dropoffLocation}
-              onChange={setDropoffLocation} />
+              onChange={(loc) => { setDropoffLocation(loc); setValidationErrors((prev) => prev.filter((f) => f !== "dropoff")); }}
+              hasError={validationErrors.includes("dropoff")} />
             
 
               <RouteInfoDisplay routeInfo={routeInfo} />
