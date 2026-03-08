@@ -110,29 +110,29 @@ const EnquiriesTab = () => {
       </div>
 
       {/* Enquiry cards */}
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         {filtered.map((e) => (
           <Card key={e.id} className="bg-card border-border hover:border-primary/30 transition-colors">
-            <CardContent className="p-5">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-foreground">{e.full_name}</h3>
-                    <Badge variant="outline" className={statusColors[e.status] || ""}>{e.status}</Badge>
-                    <Badge variant="outline" className={paymentColors[e.payment_status || "unpaid"] || ""}>
+            <CardContent className="p-3 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-3">
+                <div className="space-y-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <h3 className="font-semibold text-foreground text-sm sm:text-base truncate">{e.full_name}</h3>
+                    <Badge variant="outline" className={`text-[10px] sm:text-xs ${statusColors[e.status] || ""}`}>{e.status}</Badge>
+                    <Badge variant="outline" className={`text-[10px] sm:text-xs ${paymentColors[e.payment_status || "unpaid"] || ""}`}>
                       {e.payment_status || "unpaid"}
                     </Badge>
                   </div>
-                  <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><Mail className="h-3 w-3" />{e.email}</span>
-                    <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{e.phone}</span>
-                    <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{formatDate(e.created_at)}</span>
+                  <div className="flex flex-col sm:flex-row sm:flex-wrap gap-1 sm:gap-4 text-[10px] sm:text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1 truncate"><Mail className="h-3 w-3 shrink-0" />{e.email}</span>
+                    <span className="flex items-center gap-1"><Phone className="h-3 w-3 shrink-0" />{e.phone}</span>
+                    <span className="flex items-center gap-1"><Calendar className="h-3 w-3 shrink-0" />{formatDate(e.created_at)}</span>
                   </div>
                 </div>
                 {e.estimated_price && (
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground">Est. Price</p>
-                    <p className="text-xl font-bold text-gold">£{e.estimated_price}</p>
+                  <div className="text-left sm:text-right shrink-0">
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Est. Price</p>
+                    <p className="text-lg sm:text-xl font-bold text-gold">£{e.estimated_price}</p>
                   </div>
                 )}
               </div>
