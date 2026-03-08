@@ -100,7 +100,7 @@ const PricingTab = () => {
       <PriceCalculator editValues={editValues} />
 
       {/* Simple values */}
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
         {simpleConfigs.map((cfg) => (
           <Card key={cfg.config_key} className="bg-muted/30 border-border">
             <CardHeader className="pb-3">
