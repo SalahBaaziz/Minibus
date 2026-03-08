@@ -74,6 +74,9 @@ const Fleet = () => {
                 <img
                 src={v.image}
                 alt={v.title}
+                loading="lazy"
+                width={400}
+                height={300}
                 className="h-full w-full object-cover" />
               
                 <div className="absolute top-4 right-4 rounded-full bg-navy/80 px-3 py-1 text-xs font-semibold text-primary-foreground">
