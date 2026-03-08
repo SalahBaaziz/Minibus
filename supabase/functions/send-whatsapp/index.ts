@@ -143,7 +143,7 @@ We've received your request and will get back to you shortly with a confirmed pr
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
-    console.error("Error in send-sms:", error);
+    console.error("Error in send-whatsapp:", error);
     const message = error instanceof Error ? error.message : "Unknown error";
     return new Response(
       JSON.stringify({ success: false, error: message }),

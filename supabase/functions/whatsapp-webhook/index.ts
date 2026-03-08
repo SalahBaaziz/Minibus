@@ -192,15 +192,15 @@ Reply CONFIRM ${shortId} to accept and book.
 Reply REJECT ${shortId} if you'd like to decline.`;
 }
 
-async function sendSMS(
+async function sendWhatsApp(
   accountSid: string, authToken: string, fromNumber: string,
   to: string, body: string
 ) {
   const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
 
   const params = new URLSearchParams();
-  params.append("From", fromNumber);
-  params.append("To", to);
+  params.append("From", `whatsapp:${fromNumber}`);
+  params.append("To", `whatsapp:${to}`);
   params.append("Body", body);
 
   const res = await fetch(url, {
