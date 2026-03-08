@@ -390,7 +390,7 @@ const EnquiryForm = () => {
               <label htmlFor="returnTime" className={labelClass}>Return pick-up time</label>
               <select
                 id="returnTime"
-                className={inputClass}
+                className={cn(inputClass, validationErrors.includes("returnTime") && errorBorderClass)}
                 value={formData.returnTime}
                 onChange={(e) => update("returnTime", e.target.value)}>
                 
