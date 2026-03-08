@@ -283,12 +283,27 @@ const EnquiryForm = () => {
           
             <div>
               <label className={labelClass}>Date of travel</label>
-              <input
-                className={inputClass}
-                type="date"
-                value={formData.date}
-                onChange={(e) => update("date", e.target.value)} />
-              
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className={cn(inputClass, "flex items-center justify-between text-left")}
+                  >
+                    {formData.date ? format(new Date(formData.date + "T00:00:00"), "d MMM yyyy") : <span className="text-primary-foreground/40">Select a date</span>}
+                    <CalendarIcon className="h-4 w-4 text-primary-foreground/40" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={formData.date ? new Date(formData.date + "T00:00:00") : undefined}
+                    onSelect={(date) => update("date", date ? format(date, "yyyy-MM-dd") : "")}
+                    disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           
             <div>
