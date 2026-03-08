@@ -51,7 +51,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-navy-light/20 text-center text-xs text-primary-foreground/40">
-          © {new Date().getFullYear()} Yorkshire Minibus Hire. All rights reserved.
+          © {new Date().getFullYear()} Academy Minibus. All rights reserved.
           <span className="mx-2">·</span>
           <a href="/admin-login" className="text-primary-foreground/10 hover:text-primary-foreground/30 transition-colors">⚙</a>
         </div>
