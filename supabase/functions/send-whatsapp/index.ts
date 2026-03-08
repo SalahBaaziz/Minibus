@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
     const BUSINESS_WHATSAPP_NUMBER = Deno.env.get("BUSINESS_WHATSAPP_NUMBER");
 
     if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_WHATSAPP_NUMBER || !BUSINESS_WHATSAPP_NUMBER) {
-      throw new Error("Missing Twilio or business WhatsApp configuration");
+      throw new Error("Missing Twilio or business phone configuration");
     }
 
     const {
@@ -54,17 +54,13 @@ Deno.serve(async (req) => {
       return `${parseInt(d)} ${months[parseInt(m) - 1]} ${y}`;
     };
 
-    // Helper to send a WhatsApp message via Twilio
-    const sendWhatsApp = async (to: string, body: string) => {
+    // Helper to send an SMS via Twilio
+    const sendSMS = async (to: string, body: string) => {
       const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`;
-      const fromNumber = TWILIO_WHATSAPP_NUMBER.startsWith("whatsapp:") 
-        ? TWILIO_WHATSAPP_NUMBER 
-        : `whatsapp:${TWILIO_WHATSAPP_NUMBER}`;
-      const toNumber = to.startsWith("whatsapp:") ? to : `whatsapp:${to}`;
 
       const params = new URLSearchParams();
-      params.append("From", fromNumber);
-      params.append("To", toNumber);
+      params.append("From", TWILIO_WHATSAPP_NUMBER);
+      params.append("To", to);
       params.append("Body", body);
 
       const res = await fetch(url, {
@@ -85,44 +81,43 @@ Deno.serve(async (req) => {
     };
 
     // ── Message to Business Owner ───────────────────────────────────────
-    const ownerMessage = `🚐 *NEW MINIBUS ENQUIRY*
+    const ownerMessage = `NEW MINIBUS ENQUIRY
 
-👤 *${fullName}*
-📧 ${email}
-📞 ${phone}
+${fullName}
+Email: ${email}
+Phone: ${phone}
 
-📋 *Journey Details*
-• Occasion: ${journeyType || "Not specified"}
-• Passengers: ${passengers || "N/A"}
-• Date: ${formatDate(date)}
-• Time: ${pickupTime || "Not specified"}
-• Return: ${returnJourney ? `Yes – ${returnTime || "TBC"}` : "No"}
+Journey Details:
+- Occasion: ${journeyType || "Not specified"}
+- Passengers: ${passengers || "N/A"}
+- Date: ${formatDate(date)}
+- Time: ${pickupTime || "Not specified"}
+- Return: ${returnJourney ? `Yes - ${returnTime || "TBC"}` : "No"}
 
-📍 *Route*
-• From: ${pickupAddress || "Not provided"}
-• To: ${dropoffAddress || "Not provided"}
-• Distance: ${distanceMiles ? `${distanceMiles} miles` : "N/A"}
-• Duration: ${formatDuration(durationMinutes)}
+Route:
+- From: ${pickupAddress || "Not provided"}
+- To: ${dropoffAddress || "Not provided"}
+- Distance: ${distanceMiles ? `${distanceMiles} miles` : "N/A"}
+- Duration: ${formatDuration(durationMinutes)}
 
-💰 *Estimated Price: £${estimatedPrice || "N/A"}*
+Estimated Price: £${estimatedPrice || "N/A"}
 
-━━━━━━━━━━━━━━━━━━
-Reply *ACCEPT ${enquiryId?.slice(0, 8)}* to confirm at this price.
-Reply *PRICE ${enquiryId?.slice(0, 8)} <amount>* to set a different price (e.g. PRICE ${enquiryId?.slice(0, 8)} 150).`;
+Reply ACCEPT ${enquiryId?.slice(0, 8)} to confirm at this price.
+Reply PRICE ${enquiryId?.slice(0, 8)} <amount> to set a different price (e.g. PRICE ${enquiryId?.slice(0, 8)} 150).`;
 
     // ── Thank-you message to Client ─────────────────────────────────────
-    const clientMessage = `Hi ${fullName}! 👋
+    const clientMessage = `Hi ${fullName}!
 
-Thanks for your enquiry with *Yorkshire Minibus*! Here's a summary:
+Thanks for your enquiry with Yorkshire Minibus! Here's a summary:
 
-🚐 ${journeyType || "Minibus"} journey
-📅 ${formatDate(date)} at ${pickupTime || "TBC"}
-📍 ${pickupAddress || "TBC"} → ${dropoffAddress || "TBC"}
-👥 ${passengers || "N/A"} passengers
+${journeyType || "Minibus"} journey
+${formatDate(date)} at ${pickupTime || "TBC"}
+${pickupAddress || "TBC"} to ${dropoffAddress || "TBC"}
+${passengers || "N/A"} passengers
 
-We've received your request and will get back to you shortly with a confirmed price. Sit tight! 🎉`;
+We've received your request and will get back to you shortly with a confirmed price. Sit tight!`;
 
-    // Format client phone for WhatsApp (assume UK if no country code)
+    // Format client phone for SMS (assume UK if no country code)
     let clientPhone = phone.replace(/\s+/g, "");
     if (clientPhone.startsWith("0")) {
       clientPhone = "+44" + clientPhone.slice(1);
@@ -132,12 +127,12 @@ We've received your request and will get back to you shortly with a confirmed pr
 
     // Send both messages
     const [ownerResult, clientResult] = await Promise.allSettled([
-      sendWhatsApp(BUSINESS_WHATSAPP_NUMBER, ownerMessage),
-      sendWhatsApp(clientPhone, clientMessage),
+      sendSMS(BUSINESS_WHATSAPP_NUMBER, ownerMessage),
+      sendSMS(clientPhone, clientMessage),
     ]);
 
-    console.log("Owner WhatsApp:", ownerResult);
-    console.log("Client WhatsApp:", clientResult);
+    console.log("Owner SMS:", ownerResult);
+    console.log("Client SMS:", clientResult);
 
     return new Response(
       JSON.stringify({
@@ -148,7 +143,7 @@ We've received your request and will get back to you shortly with a confirmed pr
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
-    console.error("Error in send-whatsapp:", error);
+    console.error("Error in send-sms:", error);
     const message = error instanceof Error ? error.message : "Unknown error";
     return new Response(
       JSON.stringify({ success: false, error: message }),
