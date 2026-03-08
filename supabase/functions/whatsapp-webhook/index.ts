@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
       const enquiry = await findEnquiry(supabase, shortId, "pending");
 
       if (!enquiry) {
-        await sendSMS(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
           `No pending enquiry found with ID ${shortId}.`);
         return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
       }
