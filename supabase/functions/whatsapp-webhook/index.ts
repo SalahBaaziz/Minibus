@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
     const body = (formData.get("Body") as string || "").trim();
     const from = formData.get("From") as string || "";
 
-    console.log(`Received SMS from ${from}: ${body}`);
+    console.log(`Received WhatsApp from ${from}: ${body}`);
 
     const emptyTwiml = `<?xml version="1.0" encoding="UTF-8"?><Response></Response>`;
     const xmlHeaders = { ...corsHeaders, "Content-Type": "text/xml" };
