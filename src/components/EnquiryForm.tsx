@@ -260,7 +260,7 @@ const EnquiryForm = () => {
                 <label htmlFor="passengers" className={labelClass}>How many passengers?</label>
                 <select
                 id="passengers"
-                className={inputClass}
+                className={cn(inputClass, validationErrors.includes("passengers") && errorBorderClass)}
                 value={formData.passengers}
                 onChange={(e) => update("passengers", e.target.value)}>
                 
