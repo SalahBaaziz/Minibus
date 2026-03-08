@@ -13,15 +13,22 @@ const Footer = lazy(() => import("@/components/Footer"));
 const Index = () => {
   return (
     <div className="min-h-screen">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-gold focus:text-navy focus:px-4 focus:py-2 focus:rounded-lg focus:font-semibold">
+        Skip to main content
+      </a>
       <Navbar />
       <Hero />
+      <main id="main-content">
+        <Suspense fallback={null}>
+          <Services />
+          <HowItWorks />
+          <Fleet />
+          <Reviews />
+          <TrustBadges />
+          <EnquiryForm />
+        </Suspense>
+      </main>
       <Suspense fallback={null}>
-        <Services />
-        <HowItWorks />
-        <Fleet />
-        <Reviews />
-        <TrustBadges />
-        <EnquiryForm />
         <Footer />
       </Suspense>
     </div>

@@ -38,14 +38,14 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-semibold uppercase tracking-wider text-primary-foreground/80">Follow Us</h4>
             <div className="mt-3 flex gap-3">
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-light/30 text-primary-foreground/60 hover:bg-gold/20 hover:text-gold transition-colors">
-                <Facebook className="h-4 w-4" />
+              <a href="#" aria-label="Facebook" className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-light/30 text-primary-foreground/60 hover:bg-gold/20 hover:text-gold transition-colors">
+                <Facebook className="h-4 w-4" aria-hidden="true" />
               </a>
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-light/30 text-primary-foreground/60 hover:bg-gold/20 hover:text-gold transition-colors">
-                <Instagram className="h-4 w-4" />
+              <a href="#" aria-label="Instagram" className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-light/30 text-primary-foreground/60 hover:bg-gold/20 hover:text-gold transition-colors">
+                <Instagram className="h-4 w-4" aria-hidden="true" />
               </a>
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-light/30 text-primary-foreground/60 hover:bg-gold/20 hover:text-gold transition-colors">
-                <Twitter className="h-4 w-4" />
+              <a href="#" aria-label="Twitter" className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-light/30 text-primary-foreground/60 hover:bg-gold/20 hover:text-gold transition-colors">
+                <Twitter className="h-4 w-4" aria-hidden="true" />
               </a>
             </div>
           </div>
