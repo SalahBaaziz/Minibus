@@ -26,7 +26,16 @@ const pickupTimeRanges = [
 
 
 const EnquiryForm = () => {
+  const formRef = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(1);
+
+  const goToStep = useCallback((newStep: number) => {
+    setStep(newStep);
+    // Prevent browser from scrolling away from the form
+    requestAnimationFrame(() => {
+      formRef.current?.scrollIntoView({ behavior: "instant", block: "nearest" });
+    });
+  }, []);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
