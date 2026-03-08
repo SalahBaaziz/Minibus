@@ -481,7 +481,7 @@ const EnquiryForm = () => {
               <div>
                 <label className="text-primary-foreground">Email Address</label>
                 <input
-                className={inputClass}
+                className={cn(inputClass, validationErrors.includes("email") && errorBorderClass)}
                 type="email"
                 placeholder="e.g. john@example.com"
                 value={formData.email}
