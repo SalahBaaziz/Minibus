@@ -66,6 +66,41 @@ const EnquiryForm = () => {
 
   const update = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    setValidationErrors((prev) => prev.filter((f) => f !== field));
+  };
+
+  const validateStep = (s: number): string[] => {
+    const missing: string[] = [];
+    if (s === 1) {
+      if (!formData.journeyType) missing.push("journeyType");
+      if (!formData.passengers) missing.push("passengers");
+    } else if (s === 2) {
+      if (!pickupLocation) missing.push("pickup");
+      if (!dropoffLocation) missing.push("dropoff");
+    } else if (s === 3) {
+      if (!formData.date) missing.push("date");
+      if (!formData.pickupTime) missing.push("pickupTime");
+      if (returnJourney && !formData.returnTime) missing.push("returnTime");
+    } else if (s === 5) {
+      if (!formData.fullName) missing.push("fullName");
+      if (!formData.email) missing.push("email");
+      if (!formData.phone) missing.push("phone");
+    }
+    return missing;
+  };
+
+  const handleNext = () => {
+    if (step === 4) {
+      goToStep(step + 1);
+      return;
+    }
+    const missing = validateStep(step);
+    if (missing.length > 0) {
+      setValidationErrors(missing);
+      return;
+    }
+    setValidationErrors([]);
+    goToStep(step + 1);
   };
 
   const handleSubmit = async () => {
