@@ -294,7 +294,7 @@ const EnquiryForm = () => {
                     <CalendarIcon className="h-4 w-4 text-primary-foreground/40" />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0 bg-background border-border" align="start">
                   <Calendar
                     mode="single"
                     selected={formData.date ? new Date(formData.date + "T00:00:00") : undefined}
