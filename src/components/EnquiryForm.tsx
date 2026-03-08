@@ -152,7 +152,7 @@ const EnquiryForm = () => {
   const inputClass =
   "w-full rounded-lg border border-navy-light/30 bg-navy-light/20 px-4 py-3 text-sm text-primary-foreground placeholder:text-primary-foreground/40 focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold/50";
 
-  const labelClass = "block text-sm font-medium text-primary-foreground/80 mb-1.5";
+  const labelClass = "block text-sm font-medium text-primary-foreground mb-1.5";
 
   return (
     <section id="enquiry" aria-labelledby="enquiry-heading" className="py-20 lg:py-28 bg-stone-300">
