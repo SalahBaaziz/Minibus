@@ -161,11 +161,14 @@ const PricingTab = () => {
         </Card>
       ))}
 
+      {/* Live Calculator */}
+      <PriceCalculator editValues={editValues} />
+
       {/* Formula explanation */}
       <Card className="bg-navy-light/5 border-navy-light/15">
         <CardContent className="p-5">
-          <p className="text-xs text-primary-foreground/40 font-mono">
-            <strong className="text-primary-foreground/60">Formula:</strong>{" "}
+          <p className="text-xs text-muted-foreground font-mono">
+            <strong className="text-foreground/60">Formula:</strong>{" "}
             price = max( (passengers / max_capacity) × distance × base_rate × time_premium × journey_premium , distance × minimum_charge_per_mile )
           </p>
         </CardContent>
@@ -173,5 +176,156 @@ const PricingTab = () => {
     </div>
   );
 };
+
+/* ── Calculator Component ─────────────────────────────────────────────── */
+
+const TIME_OPTIONS = ["Morning", "Afternoon", "Early Morning", "Evening", "Late Night", "Overnight"];
+const JOURNEY_OPTIONS = ["Corporate", "School Trip", "Other", "Airport Transfer", "Wedding", "Night Out"];
+const PASSENGER_OPTIONS = ["1–8", "9–12", "13–16"];
+
+function PriceCalculator({ editValues }: { editValues: Record<string, any> }) {
+  const [distance, setDistance] = useState(20);
+  const [passengers, setPassengers] = useState("9–12");
+  const [timePeriod, setTimePeriod] = useState("Afternoon");
+  const [journeyType, setJourneyType] = useState("Other");
+
+  const result = useMemo(() => {
+    // Extract config values (fall back to defaults)
+    const baseRate = typeof editValues["base_rate"] === "number" ? editValues["base_rate"] : 5;
+    const maxCapacity = typeof editValues["max_capacity"] === "number" ? editValues["max_capacity"] : 16;
+    const minChargePerMile = typeof editValues["minimum_charge_per_mile"] === "number" ? editValues["minimum_charge_per_mile"] : 10 / 3;
+
+    const timePremiums = editValues["time_premiums"] || {};
+    const journeyPremiums = editValues["journey_type_premiums"] || {};
+
+    const timePremium = timePremiums[timePeriod] ?? 1.0;
+    const journeyPremium = journeyPremiums[journeyType] ?? 1.0;
+
+    // Parse passenger count (take upper bound)
+    const match = passengers.match(/(\d+)$/);
+    const pax = match ? parseInt(match[1]) : 8;
+
+    const fairPrice = (pax / maxCapacity) * distance * baseRate * timePremium * journeyPremium;
+    const minimumCharge = distance * minChargePerMile;
+    const finalPrice = Math.max(fairPrice, minimumCharge);
+
+    return {
+      finalPrice: Math.round(finalPrice * 100) / 100,
+      fairPrice: Math.round(fairPrice * 100) / 100,
+      minimumCharge: Math.round(minimumCharge * 100) / 100,
+      usedMinimum: minimumCharge > fairPrice,
+      timePremium,
+      journeyPremium,
+    };
+  }, [distance, passengers, timePeriod, journeyType, editValues]);
+
+  return (
+    <Card className="border-border bg-card">
+      <CardHeader className="pb-3">
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+            <Calculator className="h-4 w-4 text-amber-500" />
+          </div>
+          <div>
+            <CardTitle className="text-sm text-foreground">Price Calculator</CardTitle>
+            <CardDescription className="text-xs">Test prices with current (unsaved) config values</CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Distance */}
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Distance (miles)</Label>
+            <Input
+              type="number"
+              min={1}
+              value={distance}
+              onChange={(e) => setDistance(parseFloat(e.target.value) || 0)}
+              className="bg-muted/50 border-border"
+            />
+          </div>
+
+          {/* Passengers */}
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Passengers</Label>
+            <Select value={passengers} onValueChange={setPassengers}>
+              <SelectTrigger className="bg-muted/50 border-border">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {PASSENGER_OPTIONS.map((p) => (
+                  <SelectItem key={p} value={p}>{p}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Time */}
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Time of Day</Label>
+            <Select value={timePeriod} onValueChange={setTimePeriod}>
+              <SelectTrigger className="bg-muted/50 border-border">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {TIME_OPTIONS.map((t) => (
+                  <SelectItem key={t} value={t}>{t}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Journey Type */}
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Journey Type</Label>
+            <Select value={journeyType} onValueChange={setJourneyType}>
+              <SelectTrigger className="bg-muted/50 border-border">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {JOURNEY_OPTIONS.map((j) => (
+                  <SelectItem key={j} value={j}>{j}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <Separator className="bg-border" />
+
+        {/* Result */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
+              <PoundSterling className="h-6 w-6 text-amber-500" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-foreground">£{result.finalPrice.toFixed(2)}</p>
+              <p className="text-xs text-muted-foreground">
+                {result.usedMinimum ? "Minimum charge applied" : "Standard calculation"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+            <span className="px-2 py-1 rounded-md bg-muted">
+              Fair: £{result.fairPrice.toFixed(2)}
+            </span>
+            <span className="px-2 py-1 rounded-md bg-muted">
+              Min: £{result.minimumCharge.toFixed(2)}
+            </span>
+            <span className="px-2 py-1 rounded-md bg-muted">
+              Time ×{result.timePremium}
+            </span>
+            <span className="px-2 py-1 rounded-md bg-muted">
+              Journey ×{result.journeyPremium}
+            </span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default PricingTab;
