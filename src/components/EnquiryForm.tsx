@@ -242,7 +242,7 @@ const EnquiryForm = () => {
                 <h3 className="font-serif text-lg font-bold text-primary-foreground">
                   Pick-up & Drop-off
                 </h3>
-                <p className="text-sm text-primary-foreground/60 mt-1">
+                <p className="text-sm text-primary-foreground/80 mt-1">
                   Search for a location — we'll pinpoint it on the map.
                 </p>
               </div>
