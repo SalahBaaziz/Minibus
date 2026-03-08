@@ -27,13 +27,16 @@ export type Database = {
           id: string
           journey_type: string | null
           notes: string | null
+          paid_at: string | null
           passengers: string | null
+          payment_status: string | null
           phone: string
           pickup_address: string | null
           pickup_time: string | null
           return_journey: boolean | null
           return_time: string | null
           status: string
+          stripe_session_id: string | null
         }
         Insert: {
           created_at?: string
@@ -47,13 +50,16 @@ export type Database = {
           id?: string
           journey_type?: string | null
           notes?: string | null
+          paid_at?: string | null
           passengers?: string | null
+          payment_status?: string | null
           phone: string
           pickup_address?: string | null
           pickup_time?: string | null
           return_journey?: boolean | null
           return_time?: string | null
           status?: string
+          stripe_session_id?: string | null
         }
         Update: {
           created_at?: string
@@ -67,13 +73,16 @@ export type Database = {
           id?: string
           journey_type?: string | null
           notes?: string | null
+          paid_at?: string | null
           passengers?: string | null
+          payment_status?: string | null
           phone?: string
           pickup_address?: string | null
           pickup_time?: string | null
           return_journey?: boolean | null
           return_time?: string | null
           status?: string
+          stripe_session_id?: string | null
         }
         Relationships: []
       }

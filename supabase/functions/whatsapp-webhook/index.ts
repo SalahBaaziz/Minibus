@@ -120,20 +120,41 @@ Deno.serve(async (req) => {
 
       await supabase.from("enquiries").update({ status: "confirmed" }).eq("id", enquiry.id);
 
+      // Create Stripe payment link
+      let paymentUrl = "";
+      try {
+        const paymentResponse = await fetch(`${SUPABASE_URL}/functions/v1/create-payment`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          },
+          body: JSON.stringify({ enquiryId: enquiry.id }),
+        });
+        const paymentData = await paymentResponse.json();
+        paymentUrl = paymentData.url || "";
+      } catch (e) {
+        console.error("Failed to create payment link:", e);
+      }
+
+      // Send payment link to client
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
         `*Booking Confirmed!*
 
 Your ${enquiry.journey_type || "minibus"} trip on ${formatDate(enquiry.date)} is locked in at £${enquiry.estimated_price}.
 
-We'll be in touch with payment details shortly.
+💳 *Payment*
+Please complete your payment using the link below:
+${paymentUrl || "Payment link will be sent shortly."}
 
 Thank you for choosing Yorkshire Minibus!`);
 
+      // Notify owner
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
         BUSINESS_WHATSAPP_NUMBER,
         `*BOOKING CONFIRMED*
 
-${enquiry.full_name} has confirmed their booking.
+${enquiry.full_name} has confirmed their booking. Payment link sent.
 
 📋 *Journey Details*
 Type: ${enquiry.journey_type || "Minibus"}
