@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
       const enquiry = await findEnquiry(supabase, shortId, "offered");
 
       if (!enquiry) {
-        await sendSMS(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
+        await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
           `No booking offer found with that ID. It may have already been confirmed or expired.`);
         return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
       }
