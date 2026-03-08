@@ -78,39 +78,41 @@ Deno.serve(async (req) => {
     // ── Message to Business Owner ───────────────────────────────────────
     const ownerMessage = `🚐 *NEW ENQUIRY*
 
-👤 ${fullName}
-📧 ${email}
-📞 ${phone}
+${fullName}
+${email}
+${phone}
 
 📋 *Journey Details*
-🎉 Occasion: ${journeyType || "Not specified"}
-👥 Passengers: ${passengers || "N/A"}
-📅 Date: ${formatDate(date)}
-🕐 Time: ${pickupTime || "Not specified"}
-🔄 Return: ${returnJourney ? `Yes – ${returnTime || "TBC"}` : "No"}
+Occasion: ${journeyType || "Not specified"}
+Passengers: ${passengers || "N/A"}
+Date: ${formatDate(date)}
+Time: ${pickupTime || "Not specified"}
+Return: ${returnJourney ? `Yes – ${returnTime || "TBC"}` : "No"}
 
 📍 *Route*
-▶️ From: ${pickupAddress || "Not provided"}
-🏁 To: ${dropoffAddress || "Not provided"}
-📏 Distance: ${distanceMiles ? `${distanceMiles} miles` : "N/A"}
-⏱️ Duration: ${formatDuration(durationMinutes)}
+From: ${pickupAddress || "Not provided"}
+To: ${dropoffAddress || "Not provided"}
+Distance: ${distanceMiles ? `${distanceMiles} miles` : "N/A"}
+Duration: ${formatDuration(durationMinutes)}
 
-💰 Estimated Price: £${estimatedPrice || "N/A"}
+💰 *Price*
+Estimated: £${estimatedPrice || "N/A"}
 
 Reply *ACCEPT* to confirm at this price.
 Reply *PRICE <amount>* to set a different price (e.g. PRICE 150).`;
 
     // ── Thank-you message to Client ─────────────────────────────────────
-    const clientMessage = `👋 Hi ${fullName}!
+    const clientMessage = `Hi ${fullName}!
 
 Thanks for your enquiry with *Yorkshire Minibus*! Here's a summary:
 
-🎉 ${journeyType || "Minibus"} journey
-📅 ${formatDate(date)} at ${pickupTime || "TBC"}
-📍 ${pickupAddress || "TBC"} ➡️ ${dropoffAddress || "TBC"}
-👥 ${passengers || "N/A"} passengers
+📋 *Journey Details*
+${journeyType || "Minibus"} journey
+${formatDate(date)} at ${pickupTime || "TBC"}
+${pickupAddress || "TBC"} → ${dropoffAddress || "TBC"}
+${passengers || "N/A"} passengers
 
-✅ We've received your request and will get back to you shortly with a confirmed price. Sit tight!`;
+We've received your request and will get back to you shortly with a confirmed price.`;
 
     let clientPhone = phone.replace(/\s+/g, "");
     if (clientPhone.startsWith("0")) {

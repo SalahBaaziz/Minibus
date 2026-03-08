@@ -99,22 +99,23 @@ Deno.serve(async (req) => {
       await supabase.from("enquiries").update({ status: "confirmed" }).eq("id", enquiry.id);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, from,
-        `🎉 *Booking Confirmed!*
+        `*Booking Confirmed!*
 
 Your ${enquiry.journey_type || "minibus"} trip on *${formatDate(enquiry.date)}* is locked in at *£${enquiry.estimated_price}*.
 
-💳 We'll be in touch with payment details shortly.
+We'll be in touch with payment details shortly.
 
-Thank you for choosing *Yorkshire Minibus*! 🚐`);
+Thank you for choosing *Yorkshire Minibus*!`);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
         BUSINESS_WHATSAPP_NUMBER,
-        `🎉 *BOOKING CONFIRMED*
+        `*BOOKING CONFIRMED*
 
 ${enquiry.full_name} has confirmed their booking at *£${enquiry.estimated_price}*!
 
-📅 ${formatDate(enquiry.date)} at ${enquiry.pickup_time || "TBC"}
-📍 ${enquiry.pickup_address || "TBC"} ➡️ ${enquiry.dropoff_address || "TBC"}`);
+📋 *Details*
+${formatDate(enquiry.date)} at ${enquiry.pickup_time || "TBC"}
+${enquiry.pickup_address || "TBC"} → ${enquiry.dropoff_address || "TBC"}`);
 
       return new Response(emptyTwiml, { status: 200, headers: xmlHeaders });
     }
@@ -208,19 +209,20 @@ function formatDate(dateStr: string | null): string {
 }
 
 function buildClientOffer(enquiry: any, price: number | null): string {
-  return `👋 Hi ${enquiry.full_name}!
+  return `Hi ${enquiry.full_name}!
 
 Great news — *Yorkshire Minibus* has come back with a quote for your trip:
 
-🎉 ${enquiry.journey_type || "Minibus"} journey
-📅 ${formatDate(enquiry.date)} at ${enquiry.pickup_time || "TBC"}
-📍 ${enquiry.pickup_address || "TBC"} ➡️ ${enquiry.dropoff_address || "TBC"}
-👥 ${enquiry.passengers || "N/A"} passengers
+📋 *Journey Details*
+${enquiry.journey_type || "Minibus"} journey
+${formatDate(enquiry.date)} at ${enquiry.pickup_time || "TBC"}
+${enquiry.pickup_address || "TBC"} → ${enquiry.dropoff_address || "TBC"}
+${enquiry.passengers || "N/A"} passengers
 
 💰 *Price: £${price || "TBC"}*
 
-Reply *CONFIRM* to accept and book ✅
-Reply *REJECT* if you'd like to decline ❌`;
+Reply *CONFIRM* to accept and book.
+Reply *REJECT* if you'd like to decline.`;
 }
 
 async function sendWhatsApp(
