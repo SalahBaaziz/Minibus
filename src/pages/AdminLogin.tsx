@@ -82,7 +82,7 @@ const AdminLogin = () => {
             <Lock className="h-6 w-6 text-gold" />
           </div>
           <h1 className="font-serif text-2xl font-bold text-primary-foreground">Admin Access</h1>
-          <p className="text-sm text-primary-foreground/50 mt-1">Yorkshire Minibus Hire</p>
+          <p className="text-sm text-primary-foreground/50 mt-1">Academy Minibus</p>
         </div>
 
         <form onSubmit={isSetup ? handleSetup : handleLogin} className="space-y-4">

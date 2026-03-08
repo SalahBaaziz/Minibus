@@ -6,9 +6,9 @@ const Footer = () => {
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h3 className="font-serif text-lg font-bold text-gold">Yorkshire Minibus Hire</h3>
+            <h3 className="font-serif text-lg font-bold text-gold">Academy Minibus</h3>
             <p className="mt-3 text-sm leading-relaxed text-primary-foreground/60">
-              Yorkshire's trusted minibus hire service. Comfortable, reliable group travel for every occasion.
+              Your trusted minibus hire service. Comfortable, reliable group travel for every occasion.
             </p>
           </div>
           <div>
@@ -51,7 +51,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-navy-light/20 text-center text-xs text-primary-foreground/40">
-          © {new Date().getFullYear()} Yorkshire Minibus Hire. All rights reserved.
+          © {new Date().getFullYear()} Academy Minibus. All rights reserved.
           <span className="mx-2">·</span>
           <a href="/admin-login" className="text-primary-foreground/10 hover:text-primary-foreground/30 transition-colors">⚙</a>
         </div>

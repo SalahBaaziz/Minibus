@@ -195,7 +195,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Yorkshire Minibus <onboarding@resend.dev>",
+        from: "Academy Minibus <onboarding@resend.dev>",
         to: [BUSINESS_EMAIL],
       subject: (() => {
         const isUrgent = date && (() => {

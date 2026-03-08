@@ -16,7 +16,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-navy-dark/95 backdrop-blur-sm border-b border-navy-light/20">
       <div className="mx-auto max-w-7xl px-6 flex items-center justify-between h-16">
         <a href="#" className="text-gold text-lg font-serif font-light text-left border-navy">
-          Yorkshire Minibus Hire
+          Academy Minibus
         </a>
 
         {/* Desktop nav */}

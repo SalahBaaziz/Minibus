@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
 
       const clientPhone = formatClientPhone(enquiry.phone);
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
-        clientPhone, `Hi ${enquiry.full_name}, unfortunately we're unable to accommodate your booking request at this time. Thank you for considering Yorkshire Minibus.`);
+        clientPhone, `Hi ${enquiry.full_name}, unfortunately we're unable to accommodate your booking request at this time. Thank you for considering Academy Minibus.`);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
         `❌ Enquiry from ${enquiry.full_name} has been declined.`);
@@ -158,7 +158,7 @@ Your ${enquiry.journey_type || "minibus"} trip on ${formatDate(enquiry.date)} is
 Please complete your payment using the link below:
 ${paymentUrl || "Payment link will be sent shortly."}
 
-Thank you for choosing Yorkshire Minibus!`);
+Thank you for choosing Academy Minibus!`);
 
       // Notify owner (use normalized business number)
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
@@ -203,7 +203,7 @@ ${enquiry.email}`);
       await supabase.from("enquiries").update({ status: "rejected" }).eq("id", enquiry.id);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, fromNumber,
-        `We're sorry to hear that. If you'd like to discuss the price, feel free to give us a call. Thanks for considering Yorkshire Minibus!`);
+        `We're sorry to hear that. If you'd like to discuss the price, feel free to give us a call. Thanks for considering Academy Minibus!`);
 
       await sendWhatsApp(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER,
         normBusiness,
@@ -307,7 +307,7 @@ function formatDate(dateStr: string | null): string {
 function buildClientOffer(enquiry: any, price: number | null): string {
   return `Hi ${enquiry.full_name}! 👋
 
-Great news — Yorkshire Minibus has come back with a quote for your trip:
+Great news — Academy Minibus has come back with a quote for your trip:
 
 📋 *Journey Details*
 Occasion: ${enquiry.journey_type || "Minibus"}
