@@ -182,7 +182,7 @@ const PricingTab = () => {
 
 const TIME_OPTIONS = ["Morning", "Afternoon", "Early Morning", "Evening", "Late Night", "Overnight"];
 const JOURNEY_OPTIONS = ["Corporate", "School Trip", "Other", "Airport Transfer", "Wedding", "Night Out"];
-const PASSENGER_OPTIONS = ["1–8", "9–12", "13–16"];
+const PASSENGER_OPTIONS = ["1–4", "5–8", "9–12", "13–16"];
 
 function PriceCalculator({ editValues }: { editValues: Record<string, any> }) {
   const [distance, setDistance] = useState(20);
