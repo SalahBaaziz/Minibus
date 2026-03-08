@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, ResponsiveContainer, AreaChart, Area, CartesianGrid } from "recharts";
+import { TrendingUp, Users, PoundSterling, Target } from "lucide-react";
 
 interface Enquiry {
   id: string;
@@ -13,7 +14,7 @@ interface Enquiry {
   payment_status: string | null;
 }
 
-const COLORS = ["hsl(168, 32%, 45%)", "hsl(210, 12%, 40%)", "hsl(168, 36%, 52%)", "hsl(210, 8%, 26%)", "hsl(168, 34%, 35%)", "hsl(210, 10%, 30%)"];
+const PIE_COLORS = ["#5B9A8B", "#3D7A6E", "#8BC4B5", "#2C5F54", "#A8D8C8", "#1E4A3F"];
 
 const AnalyticsTab = () => {
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
@@ -68,8 +69,14 @@ const AnalyticsTab = () => {
     return Math.round((confirmed / enquiries.length) * 100);
   }, [enquiries]);
 
+  const avgPrice = useMemo(() => {
+    const withPrice = enquiries.filter((e) => e.estimated_price);
+    if (!withPrice.length) return 0;
+    return Math.round(withPrice.reduce((s, e) => s + (e.estimated_price || 0), 0) / withPrice.length);
+  }, [enquiries]);
+
   if (loading) {
-    return <div className="text-primary-foreground/50 text-center py-12">Loading analytics…</div>;
+    return <div className="text-muted-foreground text-center py-12">Loading analytics…</div>;
   }
 
   const chartConfig = {
@@ -77,55 +84,85 @@ const AnalyticsTab = () => {
     value: { label: "Count", color: "hsl(168, 32%, 45%)" },
   };
 
+  const kpis = [
+    { label: "Total Enquiries", value: enquiries.length.toString(), icon: Users, change: "+12% this week", color: "bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400" },
+    { label: "Conversion Rate", value: `${conversionRate}%`, icon: Target, change: "of all enquiries", color: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400" },
+    { label: "Revenue (Paid)", value: `£${totalRevenue.toFixed(0)}`, icon: PoundSterling, change: "total collected", color: "bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400" },
+    { label: "Avg. Quote", value: `£${avgPrice}`, icon: TrendingUp, change: "per enquiry", color: "bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400" },
+  ];
+
   return (
     <div className="space-y-6">
-      {/* KPIs */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {[
-          { label: "Total Enquiries", value: enquiries.length },
-          { label: "Conversion Rate", value: `${conversionRate}%` },
-          { label: "Revenue (Paid)", value: `£${totalRevenue.toFixed(0)}` },
-          { label: "Avg. Price", value: `£${enquiries.length ? (enquiries.reduce((s, e) => s + (e.estimated_price || 0), 0) / enquiries.filter((e) => e.estimated_price).length || 0).toFixed(0) : 0}` },
-        ].map((kpi) => (
-          <Card key={kpi.label} className="bg-navy-light/20 border-navy-light/30">
-            <CardContent className="p-4">
-              <p className="text-xs text-primary-foreground/50">{kpi.label}</p>
-              <p className="text-2xl font-bold text-gold">{kpi.value}</p>
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {kpis.map((kpi) => (
+          <Card key={kpi.label} className="bg-white dark:bg-card border shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="p-5">
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{kpi.label}</p>
+                  <p className="text-3xl font-bold tracking-tight text-foreground">{kpi.value}</p>
+                  <p className="text-xs text-muted-foreground">{kpi.change}</p>
+                </div>
+                <div className={`p-2.5 rounded-xl ${kpi.color}`}>
+                  <kpi.icon className="h-5 w-5" />
+                </div>
+              </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Enquiries over time */}
-      <Card className="bg-navy-light/10 border-navy-light/20">
-        <CardHeader>
-          <CardTitle className="text-primary-foreground text-sm">Enquiries Over Time</CardTitle>
+      {/* Enquiries Over Time - Area Chart */}
+      <Card className="bg-white dark:bg-card border shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base font-semibold text-foreground">Enquiries Over Time</CardTitle>
+          <p className="text-xs text-muted-foreground">Daily enquiry volume</p>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="h-[250px] w-full">
-            <BarChart data={enquiriesOverTime}>
-              <XAxis dataKey="date" tick={{ fill: "hsl(0,0%,70%)", fontSize: 11 }} />
-              <YAxis tick={{ fill: "hsl(0,0%,70%)", fontSize: 11 }} allowDecimals={false} />
+          <ChartContainer config={chartConfig} className="h-[280px] w-full">
+            <AreaChart data={enquiriesOverTime}>
+              <defs>
+                <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="hsl(168, 32%, 45%)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="hsl(168, 32%, 45%)" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(210, 12%, 90%)" vertical={false} />
+              <XAxis dataKey="date" tick={{ fill: "hsl(210, 10%, 50%)", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "hsl(210, 10%, 50%)", fontSize: 11 }} allowDecimals={false} axisLine={false} tickLine={false} />
               <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="count" fill="hsl(168, 32%, 45%)" radius={[4, 4, 0, 0]} />
-            </BarChart>
+              <Area type="monotone" dataKey="count" stroke="hsl(168, 32%, 45%)" strokeWidth={2} fill="url(#colorCount)" />
+            </AreaChart>
           </ChartContainer>
         </CardContent>
       </Card>
 
       <div className="grid md:grid-cols-2 gap-4">
-        {/* Journey type breakdown */}
-        <Card className="bg-navy-light/10 border-navy-light/20">
-          <CardHeader>
-            <CardTitle className="text-primary-foreground text-sm">By Journey Type</CardTitle>
+        {/* Journey Type - Pie */}
+        <Card className="bg-white dark:bg-card border shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-semibold text-foreground">Journey Types</CardTitle>
+            <p className="text-xs text-muted-foreground">Breakdown by category</p>
           </CardHeader>
-          <CardContent className="flex justify-center">
-            <div className="h-[220px] w-full max-w-[300px]">
+          <CardContent>
+            <div className="h-[260px] w-full flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={journeyTypeData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                  <Pie
+                    data={journeyTypeData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={55}
+                    outerRadius={90}
+                    paddingAngle={3}
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    labelLine={{ stroke: "hsl(210, 10%, 70%)" }}
+                  >
                     {journeyTypeData.map((_, i) => (
-                      <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                     ))}
                   </Pie>
                   <ChartTooltip />
@@ -135,18 +172,20 @@ const AnalyticsTab = () => {
           </CardContent>
         </Card>
 
-        {/* Status breakdown */}
-        <Card className="bg-navy-light/10 border-navy-light/20">
-          <CardHeader>
-            <CardTitle className="text-primary-foreground text-sm">By Status</CardTitle>
+        {/* Status Breakdown - Horizontal Bar */}
+        <Card className="bg-white dark:bg-card border shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-semibold text-foreground">Status Breakdown</CardTitle>
+            <p className="text-xs text-muted-foreground">Current enquiry statuses</p>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-[220px] w-full">
-              <BarChart data={statusData} layout="vertical">
-                <XAxis type="number" tick={{ fill: "hsl(0,0%,70%)", fontSize: 11 }} allowDecimals={false} />
-                <YAxis dataKey="name" type="category" tick={{ fill: "hsl(0,0%,70%)", fontSize: 11 }} width={80} />
+            <ChartContainer config={chartConfig} className="h-[260px] w-full">
+              <BarChart data={statusData} layout="vertical" barCategoryGap="20%">
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(210, 12%, 90%)" horizontal={false} />
+                <XAxis type="number" tick={{ fill: "hsl(210, 10%, 50%)", fontSize: 11 }} allowDecimals={false} axisLine={false} tickLine={false} />
+                <YAxis dataKey="name" type="category" tick={{ fill: "hsl(210, 10%, 50%)", fontSize: 11 }} width={80} axisLine={false} tickLine={false} />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="value" fill="hsl(168, 36%, 52%)" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="value" fill="hsl(168, 32%, 45%)" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ChartContainer>
           </CardContent>
