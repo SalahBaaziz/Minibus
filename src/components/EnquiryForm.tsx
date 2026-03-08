@@ -113,7 +113,7 @@ const EnquiryForm = () => {
             returnTime: returnJourney ? formData.returnTime : null,
             distanceMiles: routeInfo?.distanceMiles || null,
             durationMinutes: routeInfo?.durationMinutes || null,
-            estimatedPrice: data.estimatedPrice
+            estimatedPrice: data.estimatedPrice,
           }
         }).catch((err) => console.warn("WhatsApp send failed (non-blocking):", err));
       }
@@ -290,8 +290,8 @@ const EnquiryForm = () => {
                 <PopoverTrigger asChild>
                   <button
                     type="button"
-                    className={cn(inputClass, "flex items-center justify-between text-left")}>
-                    
+                    className={cn(inputClass, "flex items-center justify-between text-left")}
+                  >
                     {formData.date ? format(new Date(formData.date + "T00:00:00"), "d MMM yyyy") : <span className="text-primary-foreground/40">Select a date</span>}
                     <CalendarIcon className="h-4 w-4 text-primary-foreground/40" />
                   </button>
@@ -303,8 +303,8 @@ const EnquiryForm = () => {
                     onSelect={(date) => update("date", date ? format(date, "yyyy-MM-dd") : "")}
                     disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                     initialFocus
-                    className={cn("p-3 pointer-events-auto")} />
-                  
+                    className={cn("p-3 pointer-events-auto")}
+                  />
                 </PopoverContent>
               </Popover>
             </div>
@@ -330,24 +330,24 @@ const EnquiryForm = () => {
           
                 <button
                   type="button"
-                  onClick={() => setReturnJourney(true)} className="bg-muted rounded-3xl">
-
-
-
-
-                  
+                  onClick={() => setReturnJourney(true)}
+                  className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  returnJourney ?
+                  "bg-gold text-navy" :
+                  "bg-navy-light/30 text-primary-foreground/60 hover:bg-navy-light/50"}`
+                  }>
                   
                   Yes
                 </button>
           
                 <button
                   type="button"
-                  onClick={() => setReturnJourney(false)} className="bg-gold-light rounded-3xl">
-
-
-
-
-                  
+                  onClick={() => setReturnJourney(false)}
+                  className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  !returnJourney ?
+                  "bg-gold text-navy" :
+                  "bg-navy-light/30 text-primary-foreground/60 hover:bg-navy-light/50"}`
+                  }>
                   
                   No
                 </button>
@@ -495,12 +495,12 @@ const EnquiryForm = () => {
               disabled={step === 2 && pickupLocation && dropoffLocation && (routeLoading || !routeInfo)}
               className="px-6 py-2.5 text-sm font-semibold text-navy transition-colors rounded-xl bg-muted disabled:opacity-50 disabled:cursor-not-allowed">
               
-                {step === 2 && routeLoading ?
-              <span className="flex items-center gap-2">
+                {step === 2 && routeLoading ? (
+                  <span className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     Calculating…
-                  </span> :
-              "Next"}
+                  </span>
+                ) : "Next"}
               </button> :
 
             <button
