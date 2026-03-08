@@ -37,6 +37,7 @@ interface RouteMapProps {
   pickup:  LocationResult | null;
   dropoff: LocationResult | null;
   onRouteCalculated: (info: RouteInfo | null) => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 // ── Error boundary ────────────────────────────────────────────────────────────
